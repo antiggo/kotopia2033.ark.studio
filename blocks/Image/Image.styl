@@ -19,14 +19,7 @@
 
 
 
-.Image_ChallengesHover
-    opacity 0
-    transition opacity 0.3s ease
-    &:hover
-        opacity 1
-
-.Image_Growth,
-.Image_GrowthHover
+.Image_Growth
     --float-x-amplitude 0vw
     --float-y-amplitude .6vw
     --float-rot-amplitude .3deg
@@ -34,22 +27,10 @@
     --float-delay -0.5s
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
     will-change transform
-
-.Image_Growth
-    transition opacity 0.3s ease
     &:hover
-        opacity 0
-    &:hover + .Image_GrowthHover
-        opacity 1
+        background-image url('../../assets/growth-hover.png') !important
 
-.Image_GrowthHover
-    opacity 0
-    transition opacity 0.3s ease
-    &:hover
-        opacity 1
-
-.Image_Future,
-.Image_FutureHover
+.Image_Future
     --float-x-amplitude 0vw
     --float-y-amplitude .7vw
     --float-rot-amplitude -.4deg
@@ -57,19 +38,8 @@
     --float-delay -1s
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
     will-change transform
-
-.Image_Future
-    transition opacity 0.3s ease
     &:hover
-        opacity 0
-    &:hover + .Image_FutureHover
-        opacity 1
-
-.Image_FutureHover
-    opacity 0
-    transition opacity 0.3s ease
-    &:hover
-        opacity 1
+        background-image url('../../assets/future-hover.png') !important
 
 /* .Image:nth-of-type(2)
     --float-x-amplitude .4vw
