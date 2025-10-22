@@ -1,0 +1,120 @@
+.Map
+    &__water
+        width 100%
+        height 100vh
+        background-size cover
+        background-repeat no-repeat
+        background-color black
+        background-image url('../../assets/water.jpg')
+        position absolute
+        &__content
+            background #241B1B
+            position fixed
+            right 1vw
+            top 1vw
+            bottom 1vw
+            width 30vw
+            height 100vh
+    &__item
+        position absolute
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.Signature
+    width 34vw
+    margin-top -1vw
+    margin-left -1vw
+    height 9vw
+    background-size cover
+    background-repeat no-repeat
+    background-color black
+    background-image url('../../assets/signature.png')
+
+
+
+.Text
+    &_Size
+        &_XL
+            color red
+            text-transform uppercase
+            font-size 2.5vw
+            line-height 2.7vw
+            margin 0 auto
+            text-align center
+            max-width 48%
+            position relative
+            z-index 10
+
+
+.App
+    font-family 'Times New Roman'
+    font-size 1.1vw
+    line-height 1.6vw
+    @media $screen-phone
+        font-size 20px
+        line-height 28px
+
+    overflow-x hidden
+    overflow-y auto
+    background background
+    color foreground
+    padding 0
+    margin 0
+    touch-highlight none
+    font-smoothing antialiased
+    -webkit-font-smoothing antialiased
+    -moz-osx-font-smoothing grayscale
+    position relative
+    cursor url('/assets/cursor.svg'), auto
+
+
+    &__wrap
+        &_Absolute
+            position absolute
+            margin-top -58vw
+
+    &__item
+        position relative
+        &_Absolute
+            position absolute
+        &_SideBar
+            
+            &:after
+                @media $screen-phone
+                    display none
+                content ''
+                width 10vw
+                position absolute
+                right 0
+                z-index 1000
+                top 0
+                height 100%
+            &_Beige
+                &:after
+                    background background
+            &_Charcoal
+                &:after
+                    background charcoal
+        &_Color
+            &_Muted
+                background background-muted
+            &_Gray
+                background background-gray
+        &_Background
+            
+            width 100vw
+            height 56vw
+            

@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "outputDirectory": ".",
+  "routes": [
+    {
+      "src": "^/$",
+      "dest": "/projects/site/pages/main.html"
+    },
+    {
+      "src": "^/case",
+      "dest": "/projects/site/pages/case.html"
+    },
+    { "src": "^/assets/(.*)", "dest": "/assets/$1" }, 
+    { "src": "^/build/site/(.*)", "dest": "/build/site/$1" },
+    {
+      "src": "^/(.*)",
+      "dest": "/projects/site/pages/$1.html"
+    },
+    {
+      "src": "^/(.+)/$",
+      "status": 307,
+      "dest": "/$1",
+      "continue": true
+    }
+  ]
+}

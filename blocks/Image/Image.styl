@@ -1,0 +1,17 @@
+.Image
+    position absolute
+    &_Rotate
+        transform rotate(-4deg)
+    & + &
+        margin-top 32px
+    &__image
+        radius()
+        width 100%
+        @media $screen-phone
+            object-fit cover
+            object-position center
+    &__subtitle
+        text-align left
+        color #0000004f
+        margin-top 4px
+    z-index 2

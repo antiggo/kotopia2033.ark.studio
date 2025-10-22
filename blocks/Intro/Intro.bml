@@ -1,0 +1,92 @@
+Beast.decl({
+    Intro: {
+        expand: function () {
+            this.append(
+                this.get('video', 'image'),
+                <content>
+                    <fixed>
+                        <dot />
+                        {this.get('title')}
+                    </fixed>
+                    {this.get('subtitle')}
+                </content>
+            )
+        },
+        domInit: function fn () {
+
+            var films = document.querySelectorAll('video');
+
+            var promise = new Promise(function(resolve) {
+                var loaded = 0;
+
+                films.forEach(function(v) {
+                    v.addEventListener('loadedmetadata', function() {
+                        loaded++;
+
+                    if (loaded === films.length) {
+                        resolve();
+                    }
+                    });
+                });
+            });
+
+            
+            promise.then(function() {
+              films.forEach(function(v) {
+                v.muted = true;
+                v.play();
+              });
+            });
+
+        }
+    },
+    Intro__title: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Text: 'XXL',
+            Line: 'L'
+        }
+    },
+    Intro__subtitle: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Caps: true,
+            Text: 'S',
+            Line: 'L'
+        }
+    },
+    Intro__image: {
+        
+        expand: function () {
+            this.append('')
+            this.css({
+                backgroundImage: 'url('+ this.text() +')'
+            })
+        }
+    },
+    Intro__video: {
+        tag:'video',
+        expand: function () {
+            this.domAttr('muted', 'true')
+            this.domAttr('autoplay', 'true')
+            this.domAttr('playsinline', 'true')
+            this.domAttr('loop', 'true')
+            this.domAttr('id', 'video')
+            
+            this.append(
+                <source source="{this.text()}"></source>
+            )
+        }
+    },
+    Intro__source: {
+        tag:'source',
+        expand: function () {
+            let src = this.param('source')
+            this.domAttr('src', src)
+            this.domAttr('type', 'video/mp4')
+            
+        }
+    } 
+})

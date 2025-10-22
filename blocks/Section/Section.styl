@@ -1,0 +1,134 @@
+.Section
+	position relative
+	padding 0 14.2vw 0 2.2vw
+
+	&_Absolute
+		position absolute
+		top -60vw
+
+	&__title
+		header()
+		color red
+		max-width 85%
+		margin-bottom 2vw
+		
+
+	&_Color
+		&_Muted
+			background background-muted
+		&_Gray
+			background background-gray
+
+	@media $screen-phone
+		padding 0 16px
+
+	&__gallery
+		margin-top 0
+
+	&_TextCenter
+		
+		.Section
+			&__text
+				max-width 100%
+			&__item
+				display block
+				&_text
+					margin 0 auto
+					width 49%
+					@media $screen-phone
+						width 100%
+
+
+	
+
+	&_SectionTwo
+		.Section
+			&__item
+				&_Image
+					margin-left 5vw
+					margin-top -2vw
+					text-align left
+					width 36%
+					@media $screen-phone
+						margin-left 0
+						width 85%
+			&__title
+				margin-top 18vw
+				margin-left 4vw
+			&__text
+				margin-left 4vw
+				
+
+		@media $screen-phone
+			max-width 100%
+
+		color color-text
+		margin-bottom margin-items
+
+		@media $screen-phone
+			margin-bottom 40px
+
+	&__quote
+		margin-left 40px
+		margin-bottom 40px
+		margin-top 40px
+		color color-green
+		font-weight 500
+		position relative
+
+		&:before
+			content ' '
+			width 3px
+			height 100%
+			left -22px
+			background #6072674a
+			position absolute
+
+		
+
+
+	&__p
+		max-width 74%
+
+		&_Bold
+			font-weight bold
+
+		&_Highlight
+			header()
+			color red
+			max-width 100%
+			margin 4vw 0 0 0
+			@media $screen-phone
+				max-width initial
+				width 100%
+
+		&_italics
+			font-style italic
+			font-weight 500
+
+
+	&__wrap
+		display table
+
+	&__item
+		display inline-block
+		vertical-align top
+
+		@media $screen-phone
+			display block
+
+		&_Text
+			width 46%
+			@media $screen-phone
+				width 100%
+
+		&_Image
+			text-align right
+			width 52%
+			@media $screen-phone
+				width 100%
+				text-align center
+			margin-top 2.6vw
+			margin-bottom margin-items
+			@media $screen-phone
+				margin-bottom 40px

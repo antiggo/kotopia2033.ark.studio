@@ -1,0 +1,36 @@
+.Menu
+    @media $screen-phone
+        display none
+    position fixed
+    right 0
+    width 10vw
+    top 0
+    bottom 0
+    font-size 1vw
+    
+    height 100vh
+    z-index 4000
+    font-family Helvetica, Arial
+    box-sizing border-box
+    padding 2vw 0 0 1.6vw
+
+    &_overcharcoal
+        color white
+    
+    &__text
+        display inline-block                    
+    
+    &__item
+        display block
+        color inherit
+        transition color 0.3s ease
+        
+        &_overcharcoal
+            color white
+        
+        &_State
+            &_Active
+                .Button
+                    background black
+        & + &
+            margin-top gap

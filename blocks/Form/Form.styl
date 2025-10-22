@@ -1,0 +1,116 @@
+.Form
+    
+    gap = 8px
+    height = 5vw
+    border-radius radius
+    margin 0 auto
+    font-size size-text
+    background none
+    margin-bottom 32px
+    margin-top 28px
+
+    &__title
+        color color-green
+        margin 0 auto 32px auto
+
+    textarea::placeholder 
+        color #999
+
+    textarea::-webkit-input-placeholder
+        color #999
+
+    textarea:-moz-placeholder
+        color #999
+
+    textarea::-moz-placeholder
+        color #999
+
+    textarea:-ms-input-placeholder
+        color #999
+
+    
+    ::placeholder
+        color #999
+
+    :-ms-input-placeholder
+        color #999
+
+
+
+    
+    form
+        margin 0
+        
+    input, textarea
+        outline 0
+        -webkit-appearance none
+        &:focus, &:active
+            border 2px solid color-action
+            outline 0
+    &__textarea
+        width 100%
+        
+        text-align left
+        padding 12 16px
+        border-radius radius
+        background #60726712
+        border 2px solid #60726733
+
+    &__input
+        width 100%
+        height height
+        text-align left
+        padding 0 16px
+        border-radius radius
+        background #60726712
+        border 2px solid #60726733
+
+        
+
+
+        @media $screen-phone
+            height 16vw
+
+        & + &
+            margin-left gap
+
+    &__button
+        width 50%
+        height height
+        line-height height
+        text-align center
+        cursor pointer
+
+        &_select
+            &[active="true"]
+                background #999 !important
+                color #fff !important
+            
+        & + &
+            margin-left gap
+    &__item
+        display inline-flex
+        width 100%
+        & + &
+            margin-top gap
+            
+    &__action
+        
+        width 100%
+        height height
+        line-height height !important
+        @media $screen-phone
+            height 16vw
+            line-height 16vw !important
+        text-align center
+        background color-action
+        color color-white
+        text-align center
+        margin 0 2px 2px 2px
+        cursor pointer
+
+    &__disabled
+        cursor default !important
+        opacity .5
+    
+

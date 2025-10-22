@@ -1,0 +1,56 @@
+Beast.decl({
+    Parallax: {
+        expand: function () {
+            this.append()
+            this.css({
+                width: this.param('width'),
+                height: this.param('height')
+            })  
+        }
+    },
+    Parallax__image: {
+        expand: function () {
+            this.empty()
+            this.css({
+                backgroundImage: 'url('+ this.text('') +')',
+                width: this.parentBlock().param('width'),
+                height: this.parentBlock().param('height'),
+                backgroundSize: this.parentBlock().param('width')
+            })
+        },
+        domInit: function fn() {
+            const parallaxImage = this.domNode();
+            if (!parallaxImage) return;
+            
+            // Get speed parameter, default to 50 if not specified
+            const defaultSpeed = this.param('speed') || 50;
+            
+            function updateParallax() {
+                const rect = parallaxImage.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const elementTop = rect.top;
+                const elementHeight = rect.height;
+                const elementCenter = elementTop + elementHeight / 2;
+                const viewportCenter = windowHeight / 2;
+                
+                // Calculate distance from viewport center (-1 to 1)
+                const distance = (viewportCenter - elementCenter) / (windowHeight / 2);
+                
+                // Check if we're on mobile (screen width <= 767px)
+                const isMobile = window.innerWidth <= 767;
+                // Use original speed for desktop, reduced speed for mobile
+                const speed = isMobile ? defaultSpeed * 0.2 : defaultSpeed;
+                
+                // Apply reversed parallax transform - negative to scroll up when scrolling down
+                const parallaxOffset = -distance * speed;
+                parallaxImage.style.transform = `translateY(${parallaxOffset}px)`;
+            }
+            
+            // Add scroll event listener
+            window.addEventListener('scroll', updateParallax);
+            
+            // Initial call
+            updateParallax();
+        }
+    }
+})

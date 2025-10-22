@@ -1,0 +1,17 @@
+Beast.decl({
+    Paper: {
+        expand: function () {
+            this.append(
+                <dot Top />,
+                <dot MiddleTop />,
+                <dot MiddleBottom />,
+                <dot Bottom />,
+                <content>
+                    {this.get('title', 'text', 'author', 'date')}
+                </content>,
+                <signature />
+            )
+        }
+    },
+    
+})

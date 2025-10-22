@@ -1,0 +1,88 @@
+Beast.decl({
+    Offer: {
+        inherits: 'Typo',
+        expand: function () {
+            this.css({
+                marginLeft: this.parentBlock().param('left'),
+                marginTop: this.parentBlock().param('top'),
+            })
+
+            let image = this.get('image')[0]._children[0]
+
+            this.append(
+
+                <card>
+                    {this.get('title', 'text', 'action')}
+                </card>,
+                
+                <image>
+                    <Image src="{image}"></Image>
+                </image>
+
+            )  
+        },   
+    },
+    Offer__title: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Text: 'L',
+            Line: 'L'
+        }
+    }, 
+    Offer__text: {
+        inherits: 'Typo',
+        mod: {
+            Text: 'M',
+            Line: 'L'
+        }
+    }, 
+    Offer__action: {
+        inherits: 'Typo',
+        mod: {
+            Text: 'M',
+            Line: 'L'
+        },
+        expand: function () {
+
+            let bookPage = (
+                <ContactModal>
+                    <Form>
+                        <title>Book free initial call to see if we are a fit</title>
+                        <item>
+                            <input placeholder="Name" id="name"></input>
+                        </item>
+                        <item>
+                            <input placeholder="Email address" id="email">Email</input>
+                        </item>
+                        <item>
+                            <textarea placeholder="Message" rows="4" id="message"></textarea>
+                        </item>
+                        <item>
+                            <action>Send</action>
+                        </item>
+                    </Form>                
+                </ContactModal>
+            )
+
+            this.on('click', function () {   
+
+                <Overlay scrollContent="true" Type="modal">
+                    {bookPage}
+                </Overlay>
+                    .param({
+                        topBar: true,
+                        scrollContent: true,
+                        background: true,
+                        HasFog: true
+                    })
+                    .pushToStackNavigation({
+                        context: this,
+                        onDidPop: function () {
+                            bookPage.detach()
+                        }
+                    })
+            })     
+        },   
+    }
+})

@@ -1,0 +1,54 @@
+.Offer
+    position relative
+    size-image = 40vw
+    size-card = 20vw
+    width 40vw
+
+    &_Top
+        z-index 500
+
+    &_White
+        z-index 200
+        color white
+        position absolute
+
+    &__card
+        background color-white
+        padding 3vw
+        position absolute
+        left 0
+        top 0
+        border-radius radius
+        z-index 5
+
+        @media $screen-phone
+            left 7vw
+            top 70vw
+            width 270px
+
+    &__title
+        color #e72305
+        font-size 2.5vw
+        line-height 2.7vw
+        margin-bottom .4vw
+
+    &__text
+        color color-text-green
+
+    &__action
+        margin-top .4vw
+        background white
+        color #e72305
+        padding .8vw 2vw
+        border-radius radius
+        display inline-block
+        cursor pointer
+
+    &__p
+        margin-bottom 16px
+
+    &__image
+        width size-image
+        @media $screen-phone
+            width 80vw
+            margin-bottom 300px

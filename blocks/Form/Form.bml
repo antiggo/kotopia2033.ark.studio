@@ -1,0 +1,165 @@
+const emailJsService = "gmail";
+const coachingTemplate = "coaching";
+
+Beast.decl({
+    Form: {
+
+        expand: function () {
+
+            this.append(
+                <form>
+                    {this.get('title', 'item')}
+                </form>
+                
+            )
+
+        },
+
+        domInit: function () {
+            var self = this
+
+            let requestForm = document.querySelector(".form__action");
+
+            requestForm.onclick = function(event) {
+              
+              event.preventDefault();
+              // if all validation goes well
+              if (validateForm() && !this.disabled) {
+                this.value = 'Отправляю...';
+                this.disabled = true;
+                this.classList.add("button-loading");
+                sendEmail();
+                
+              } else return false;
+            }
+
+            // function sendRquestEmail(name, email, phone) {
+
+            //   emailjs.send(emailJsService, emailJsTemplate, {
+            //     name: name,
+            //     email: email,
+            //   })
+            //   .then(function() {
+
+            //       //only in successful case send email to client
+
+            //       sendEmailClient();
+                  
+            //   }, function(error) {
+            //       console.log('Failed sendig email', error);
+            //   });
+            // }
+
+            //send email to client
+            function sendEmail() {
+                
+                let btnSend = document.querySelector(".form__action-title");
+                btnSend.innerHTML = 'Message sent';
+                btnSend.parentNode.className = "form__action form__disabled";
+
+                $(".form__action").attr("disabled", "disabled").off('click');
+
+                emailjs.send(emailJsService, coachingTemplate, {
+                  name: document.querySelector("#name").value,
+                  email: document.querySelector("#email").value,
+                  message: document.querySelector("#message").value
+                })
+                .then(function() {
+                    console.log('sent?');
+                }, function(error) {
+                    console.log('Failed sendig email', error);
+                });
+            }
+
+            //validation of all input fields
+            function validateForm() {
+              
+              let nameField = document.querySelector("#name");
+              if (nameField.value.trim() == "") {
+                alert('Please enter your name');
+                return false;
+              }
+
+              let emailField = document.querySelector("#email");
+              if (emailField.value.trim() == "") {
+                alert('Please enter your email, so we can get back to you');
+                return false;
+              }
+
+              return true;
+            }
+        }
+    },
+
+    Form__form: {
+        tag: 'div',
+        expand: function () {
+
+            this.domAttr('action', this.parentBlock().param('action'))
+            this.domAttr('id', this.parentBlock().param('id'))
+
+        }
+    },
+
+    Form__action: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Text: 'M',
+            Line: 'L'
+        }, 
+        expand: function () {
+            // this.domAttr('type', 'submit')
+            // this.domAttr('value', this.text())
+            this.append(
+              <action-title>{this.text()}</action-title>,
+            )
+        }
+    },
+
+    Form__input: {
+        inherits: 'Typo',
+        mod: {
+            Text: 'M',
+            Line: 'L'
+        }, 
+        tag: 'input',
+        expand: function () {
+            this.domAttr('type', this.param('type'))
+            this.domAttr('id', this.param('id'))
+            this.domAttr('placeholder', this.param('placeholder'))
+            this.domAttr('required', true)
+        }
+    },
+
+    Form__textarea: {
+        inherits: 'Typo',
+        mod: {
+            Text: 'M',
+            Line: 'L'
+        }, 
+        tag: 'textarea',
+        expand: function () {
+            this.domAttr('type', this.param('type'))
+            this.domAttr('id', this.param('id'))
+            this.domAttr('placeholder', this.param('placeholder'))
+            this.domAttr('required', true)
+            this.domAttr('rows', this.param('rows'))
+            this.domAttr('cols', this.param('cols'))
+        }
+    },
+
+    Form__title: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Text: 'L',
+            Line: 'L'
+        }, 
+        
+    },
+
+    
+    
+    
+})

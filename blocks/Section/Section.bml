@@ -1,0 +1,36 @@
+Beast.decl({
+    Section: {
+
+        expand: function () {
+            if (this.mod('TextCenter')) {
+                this.append(
+                    <wrap>
+                        <item Text>
+                            {this.get('i')}
+                            {this.get('Image')}
+                            {this.get('title', 'text')}
+                        </item>
+                    </wrap>
+                )
+            } else {
+                this.append(
+                    <wrap>
+                        
+                        <item Image>
+                            {this.get('Image', 'side')}
+                        </item>
+
+                        <item Text>
+                            {this.get('title', 'text', 'Paper')}
+                        </item>
+                    </wrap>
+                )
+            }
+            
+        }
+    },
+   
+    
+})
+
+

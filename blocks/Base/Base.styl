@@ -1,0 +1,51 @@
+
+
+$screen-phone = 'screen and (max-width: 767px)'
+
+background = #DADADA
+background-muted = #303C3B
+background-gray = #A1A6AA
+foreground = #000
+red = #E72305
+charcoal = #1E1E1E
+white = #fff
+
+gap = 1vw
+gapx = 4vw
+
+times()
+    font-family 'Times New Roman'
+
+superheader()
+    font-size 5vw
+    @media $screen-phone
+        font-size 60px
+        line-height 60px
+
+header()
+    text-transform uppercase
+    font-size 2.8vw
+    line-height 3vw
+    @media $screen-phone
+        font-size 40px
+        line-height 48px
+
+body()
+    font-size 1.1vw
+    line-height 1.6vw
+    @media $screen-phone
+        font-size 20px
+        line-height 28px
+
+
+radius = .5vw
+
+radius()
+    border-radius .5vw
+    @media $screen-phone
+        border-radius 12px
+
+gridX()
+    padding 0 gapx
+    @media $screen-phone
+        padding 0 20px

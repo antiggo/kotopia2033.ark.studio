@@ -1,0 +1,140 @@
+.Intro
+    position relative
+    font-family Helvetica, Arial
+    color red
+    overflow hidden
+    font-weight bold
+    margin-right 10vw
+    z-index 1
+
+    @media $screen-phone
+        margin-right 0
+
+    /* &__fixed
+        position fixed
+        top -20vw */
+
+    &_Book
+        .Intro
+            &__content
+                bottom 8vw
+                @media $screen-phone
+                    bottom 13vw
+            &__image
+                height 44vw
+                background-position 0 -12vw
+                @media $screen-phone
+                    height 60vw
+
+    &_Blog
+        .Intro
+            &__content
+                bottom 8vw
+                @media $screen-phone
+                    bottom 13vw
+            &__image
+                height 44vw
+                background-position 0 -12vw
+                @media $screen-phone
+                    height 60vw
+    &_Wooway
+        .Intro
+            &__title
+                font-family 'ff-providence-sans-web-pro'
+
+            &__subtitle
+                font-family 'ff-providence-sans-web-pro'
+            &__content
+                bottom 5.9vw
+                @media $screen-phone
+                    bottom 29.9vw
+
+    &_Resources
+        .Intro
+            &__image
+                height 40vw
+                background-position-y -60px
+                background-repeat no-repeat
+                @media $screen-phone
+                    height 50vw
+                    background-position-y -6px
+
+    &__image
+        height 58vw
+        @media $screen-phone
+            height 128vw
+        background-size cover
+        
+
+    &:after
+        content ' '
+        position absolute
+        left 0
+        right 0
+        top 0 
+        bottom 0
+        z-index 400
+        background black
+        opacity .2
+
+    &__content 
+        position absolute
+        z-index 800
+        text-align left
+        left 2.2vw
+        right 2.2vw
+        bottom 3vw
+        @media $screen-phone
+            top 60px
+            bottom initial
+    
+    &__dot
+        size = 1.6vw
+        width size
+        height size
+        background-color red
+        border-radius 100%
+        @media $screen-phone
+            width 20px
+            height 20px
+            margin-left 10px
+
+    &__title
+        font-size 2.2vw
+        margin-left 1.9vw
+        margin-top .8vw
+        letter-spacing -.02vw
+
+        @media $screen-phone
+            font-size 32px
+            margin-left 30px
+            margin-top 6px
+
+    &__subtitle
+        font-size .9vw
+        margin-top 1.6vw
+        margin-left 1.9vw
+
+        @media $screen-phone
+            font-size 16px
+            line-height 18px
+            margin-left 30px
+            margin-top 12px
+
+
+    &__video
+        position relative
+        
+        z-index 50
+
+        width 113%
+        margin-left -13%
+        margin-bottom -1%
+
+        @media $screen-phone
+            top = -124vw
+            width 320%
+            z-index 50
+            left -70vw
+            top top
+            margin-bottom top

@@ -1,0 +1,24 @@
+Beast.decl({
+    Menu: {
+        domInit: function () {
+            
+        },
+
+        expand: function () {
+            this.append(
+                this.get('item')
+            )
+        },
+            
+    },
+    'Menu__item': {
+        expand: function () {
+            this.append(
+                <text>{this.get()}</text>
+            )
+        },
+
+    },
+     
+})
+

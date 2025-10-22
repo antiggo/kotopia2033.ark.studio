@@ -1,0 +1,35 @@
+.Parallax
+    position relative
+    display block
+    overflow hidden
+    &_mobilehide
+        display none
+    &_mobilemax
+        @media $screen-phone
+            width 90vw !important
+            height 100vw !important
+            .Parallax__image
+                width 90vw !important
+                height 100vw !important
+                background-size 90vw !important
+    &_mobilemax2
+        @media $screen-phone
+            width 90vw !important
+            height 80vw !important
+            .Parallax__image
+                width 90vw !important
+                height 80vw !important
+                background-size 90vw !important
+
+.Parallax__image
+    position absolute
+    top 0
+    left 0
+    width 100%
+    height 100%
+    background-position center
+    background-repeat no-repeat
+    will-change transform
+    backface-visibility hidden
+
+    
