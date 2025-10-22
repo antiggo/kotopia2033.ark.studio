@@ -1,5 +1,8 @@
 .Image
     position absolute
+    --float-amplitude .6vw
+    animation floatY 6s ease-in-out infinite
+    will-change transform
     &_Rotate
         transform rotate(-4deg)
     & + &
@@ -15,3 +18,12 @@
         color #0000004f
         margin-top 4px
     z-index 2
+    &:hover
+        --float-amplitude 1.2vw
+        animation-duration 3s
+
+@keyframes floatY
+    0%, 100%
+        transform translateY(0)
+    50%
+        transform translateY(calc(-1 * var(--float-amplitude, .6vw)))
