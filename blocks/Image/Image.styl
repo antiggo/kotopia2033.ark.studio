@@ -1,47 +1,77 @@
 .Image
     position absolute
-    // floating defaults (can be customized per-instance)
-    --float-x-amplitude 0vw
-    --float-y-amplitude .6vw
-    --float-rot-amplitude 0deg
-    --float-duration 6s
-    --float-delay 0s
-    animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
-    will-change transform
-    &_Challnges
-        &:hover
-            width 90%
-            height 7vw
-            background-size cover
-            background-repeat no-repeat
-            background-image url('../../assets/challenges.svg')
-    &_Rotate
-        transform rotate(-4deg)
-    & + &
-        margin-top 32px
-    &__image
-        radius()
-        width 100%
-        @media $screen-phone
-            object-fit cover
-            object-position center
-    &__subtitle
-        text-align left
-        color #0000004f
-        margin-top 4px
+    background-size contain
+    background-repeat no-repeat
+    width 100%
     z-index 2
-    &:hover
-        --float-y-amplitude 1.2vw
-        --float-x-amplitude .3vw
-        --float-duration 3s
 
 // staggered variations so different Images float differently
-.Image:nth-of-type(1)
+.Image_Challenges
+    --float-x-amplitude 0vw
     --float-y-amplitude .8vw
     --float-rot-amplitude .5deg
+    --float-duration 6s
     --float-delay -0.7s
+    animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
+    will-change transform
+    &:hover
+        background-image url('../../assets/challenges-hover.png') !important
 
-.Image:nth-of-type(2)
+
+
+.Image_ChallengesHover
+    opacity 0
+    transition opacity 0.3s ease
+    &:hover
+        opacity 1
+
+.Image_Growth,
+.Image_GrowthHover
+    --float-x-amplitude 0vw
+    --float-y-amplitude .6vw
+    --float-rot-amplitude .3deg
+    --float-duration 6s
+    --float-delay -0.5s
+    animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
+    will-change transform
+
+.Image_Growth
+    transition opacity 0.3s ease
+    &:hover
+        opacity 0
+    &:hover + .Image_GrowthHover
+        opacity 1
+
+.Image_GrowthHover
+    opacity 0
+    transition opacity 0.3s ease
+    &:hover
+        opacity 1
+
+.Image_Future,
+.Image_FutureHover
+    --float-x-amplitude 0vw
+    --float-y-amplitude .7vw
+    --float-rot-amplitude -.4deg
+    --float-duration 6s
+    --float-delay -1s
+    animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
+    will-change transform
+
+.Image_Future
+    transition opacity 0.3s ease
+    &:hover
+        opacity 0
+    &:hover + .Image_FutureHover
+        opacity 1
+
+.Image_FutureHover
+    opacity 0
+    transition opacity 0.3s ease
+    &:hover
+        opacity 1
+
+/* .Image:nth-of-type(2)
     --float-x-amplitude .4vw
     --float-y-amplitude .5vw
     --float-rot-amplitude .6deg
@@ -73,7 +103,7 @@
     --float-y-amplitude .4vw
     --float-rot-amplitude -.9deg
     --float-duration 7.2s
-    --float-delay -2s
+    --float-delay -2s */
 
 @keyframes floatComposite
     0%, 100%

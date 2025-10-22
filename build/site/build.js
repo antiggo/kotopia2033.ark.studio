@@ -4220,169 +4220,6 @@ BemNode.prototype = {
 }
 
 })();
-const emailJsService = "gmail";
-const coachingTemplate = "coaching";
-
-Beast.decl({
-    Form: {
-
-        expand: function () {
-
-            this.append(
-                Beast.node("form",{__context:this},"\n                    ",this.get('title', 'item'),"\n                ")
-                
-            )
-
-        },
-
-        domInit: function () {
-            var self = this
-
-            let requestForm = document.querySelector(".form__action");
-
-            requestForm.onclick = function(event) {
-              
-              event.preventDefault();
-              // if all validation goes well
-              if (validateForm() && !this.disabled) {
-                this.value = 'Отправляю...';
-                this.disabled = true;
-                this.classList.add("button-loading");
-                sendEmail();
-                
-              } else return false;
-            }
-
-            // function sendRquestEmail(name, email, phone) {
-
-            //   emailjs.send(emailJsService, emailJsTemplate, {
-            //     name: name,
-            //     email: email,
-            //   })
-            //   .then(function() {
-
-            //       //only in successful case send email to client
-
-            //       sendEmailClient();
-                  
-            //   }, function(error) {
-            //       console.log('Failed sendig email', error);
-            //   });
-            // }
-
-            //send email to client
-            function sendEmail() {
-                
-                let btnSend = document.querySelector(".form__action-title");
-                btnSend.innerHTML = 'Message sent';
-                btnSend.parentNode.className = "form__action form__disabled";
-
-                $(".form__action").attr("disabled", "disabled").off('click');
-
-                emailjs.send(emailJsService, coachingTemplate, {
-                  name: document.querySelector("#name").value,
-                  email: document.querySelector("#email").value,
-                  message: document.querySelector("#message").value
-                })
-                .then(function() {
-                    console.log('sent?');
-                }, function(error) {
-                    console.log('Failed sendig email', error);
-                });
-            }
-
-            //validation of all input fields
-            function validateForm() {
-              
-              let nameField = document.querySelector("#name");
-              if (nameField.value.trim() == "") {
-                alert('Please enter your name');
-                return false;
-              }
-
-              let emailField = document.querySelector("#email");
-              if (emailField.value.trim() == "") {
-                alert('Please enter your email, so we can get back to you');
-                return false;
-              }
-
-              return true;
-            }
-        }
-    },
-
-    Form__form: {
-        tag: 'div',
-        expand: function () {
-
-            this.domAttr('action', this.parentBlock().param('action'))
-            this.domAttr('id', this.parentBlock().param('id'))
-
-        }
-    },
-
-    Form__action: {
-        inherits: 'Typo',
-        mod: {
-            Major: true,
-            Text: 'M',
-            Line: 'L'
-        }, 
-        expand: function () {
-            // this.domAttr('type', 'submit')
-            // this.domAttr('value', this.text())
-            this.append(
-              Beast.node("action-title",{__context:this},this.text()),
-            )
-        }
-    },
-
-    Form__input: {
-        inherits: 'Typo',
-        mod: {
-            Text: 'M',
-            Line: 'L'
-        }, 
-        tag: 'input',
-        expand: function () {
-            this.domAttr('type', this.param('type'))
-            this.domAttr('id', this.param('id'))
-            this.domAttr('placeholder', this.param('placeholder'))
-            this.domAttr('required', true)
-        }
-    },
-
-    Form__textarea: {
-        inherits: 'Typo',
-        mod: {
-            Text: 'M',
-            Line: 'L'
-        }, 
-        tag: 'textarea',
-        expand: function () {
-            this.domAttr('type', this.param('type'))
-            this.domAttr('id', this.param('id'))
-            this.domAttr('placeholder', this.param('placeholder'))
-            this.domAttr('required', true)
-            this.domAttr('rows', this.param('rows'))
-            this.domAttr('cols', this.param('cols'))
-        }
-    },
-
-    Form__title: {
-        inherits: 'Typo',
-        mod: {
-            Major: true,
-            Text: 'L',
-            Line: 'L'
-        }, 
-        
-    },
-
-    
-    
-    
-})
 Beast.decl({
     App: {
         inherits: ['Grid', 'UIStackNavigation'],
@@ -5067,181 +4904,169 @@ Beast.decl({
 
 
 
+const emailJsService = "gmail";
+const coachingTemplate = "coaching";
+
 Beast.decl({
-    Intro: {
+    Form: {
+
         expand: function () {
+
             this.append(
-                this.get('video', 'image'),
-                Beast.node("content",{__context:this},"\n                    ",Beast.node("fixed",undefined,"\n                        ",Beast.node("dot",{"":true}),"\n                        ",this.get('title'),"\n                    "),"\n                    ",this.get('subtitle'),"\n                ")
+                Beast.node("form",{__context:this},"\n                    ",this.get('title', 'item'),"\n                ")
+                
             )
+
         },
-        domInit: function fn () {
 
-            var films = document.querySelectorAll('video');
+        domInit: function () {
+            var self = this
 
-            var promise = new Promise(function(resolve) {
-                var loaded = 0;
+            let requestForm = document.querySelector(".form__action");
 
-                films.forEach(function(v) {
-                    v.addEventListener('loadedmetadata', function() {
-                        loaded++;
-
-                    if (loaded === films.length) {
-                        resolve();
-                    }
-                    });
-                });
-            });
-
-            
-            promise.then(function() {
-              films.forEach(function(v) {
-                v.muted = true;
-                v.play();
-              });
-            });
-
-        }
-    },
-    Intro__title: {
-        inherits: 'Typo',
-        mod: {
-            Major: true,
-            Text: 'XXL',
-            Line: 'L'
-        }
-    },
-    Intro__subtitle: {
-        inherits: 'Typo',
-        mod: {
-            Major: true,
-            Caps: true,
-            Text: 'S',
-            Line: 'L'
-        }
-    },
-    Intro__image: {
-        
-        expand: function () {
-            this.append('')
-            this.css({
-                backgroundImage: 'url('+ this.text() +')'
-            })
-        }
-    },
-    Intro__video: {
-        tag:'video',
-        expand: function () {
-            this.domAttr('muted', 'true')
-            this.domAttr('autoplay', 'true')
-            this.domAttr('playsinline', 'true')
-            this.domAttr('loop', 'true')
-            this.domAttr('id', 'video')
-            
-            this.append(
-                Beast.node("source",{__context:this,"source":this.text()})
-            )
-        }
-    },
-    Intro__source: {
-        tag:'source',
-        expand: function () {
-            let src = this.param('source')
-            this.domAttr('src', src)
-            this.domAttr('type', 'video/mp4')
-            
-        }
-    } 
-})
-Beast.decl({
-    Image: {
-        expand: function () {
-            this.append(
-                Beast.node("image",{__context:this,"src":this.param('src')}),
-                this.get('subtitle')
-            )
-            
-        }
-    },
-    Image__image: {
-        tag: 'img',
-        expand: function () {
-            this.domAttr('src', this.param('src'))
-            if (MissEvent.mobile) {
-                this.css({
-                    width: this.parentBlock().param('mobilewidth'),
-                    height: this.parentBlock().param('mobileheight'),
-                    transform: 'rotate(' + this.parentBlock().param('mobilerotate') + ')',
-                    marginLeft: this.parentBlock().param('mobileleft'),
-                    marginTop: this.parentBlock().param('mobiletop'),
-                })
-            } else {
-                this.css({
-                    transform: 'rotate(' + this.parentBlock().param('rotate') + ')',
-                    width: this.parentBlock().param('width'),
-                    marginLeft: this.parentBlock().param('left'),
-                    marginTop: this.parentBlock().param('top'),
-                })    
+            requestForm.onclick = function(event) {
+              
+              event.preventDefault();
+              // if all validation goes well
+              if (validateForm() && !this.disabled) {
+                this.value = 'Отправляю...';
+                this.disabled = true;
+                this.classList.add("button-loading");
+                sendEmail();
+                
+              } else return false;
             }
-            this.css({
+
+            // function sendRquestEmail(name, email, phone) {
+
+            //   emailjs.send(emailJsService, emailJsTemplate, {
+            //     name: name,
+            //     email: email,
+            //   })
+            //   .then(function() {
+
+            //       //only in successful case send email to client
+
+            //       sendEmailClient();
+                  
+            //   }, function(error) {
+            //       console.log('Failed sendig email', error);
+            //   });
+            // }
+
+            //send email to client
+            function sendEmail() {
                 
-                
-            })
+                let btnSend = document.querySelector(".form__action-title");
+                btnSend.innerHTML = 'Message sent';
+                btnSend.parentNode.className = "form__action form__disabled";
+
+                $(".form__action").attr("disabled", "disabled").off('click');
+
+                emailjs.send(emailJsService, coachingTemplate, {
+                  name: document.querySelector("#name").value,
+                  email: document.querySelector("#email").value,
+                  message: document.querySelector("#message").value
+                })
+                .then(function() {
+                    console.log('sent?');
+                }, function(error) {
+                    console.log('Failed sendig email', error);
+                });
+            }
+
+            //validation of all input fields
+            function validateForm() {
+              
+              let nameField = document.querySelector("#name");
+              if (nameField.value.trim() == "") {
+                alert('Please enter your name');
+                return false;
+              }
+
+              let emailField = document.querySelector("#email");
+              if (emailField.value.trim() == "") {
+                alert('Please enter your email, so we can get back to you');
+                return false;
+              }
+
+              return true;
+            }
         }
     },
-    Image__subtitle: {
+
+    Form__form: {
+        tag: 'div',
+        expand: function () {
+
+            this.domAttr('action', this.parentBlock().param('action'))
+            this.domAttr('id', this.parentBlock().param('id'))
+
+        }
+    },
+
+    Form__action: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Text: 'M',
+            Line: 'L'
+        }, 
+        expand: function () {
+            // this.domAttr('type', 'submit')
+            // this.domAttr('value', this.text())
+            this.append(
+              Beast.node("action-title",{__context:this},this.text()),
+            )
+        }
+    },
+
+    Form__input: {
         inherits: 'Typo',
         mod: {
             Text: 'M',
             Line: 'L'
+        }, 
+        tag: 'input',
+        expand: function () {
+            this.domAttr('type', this.param('type'))
+            this.domAttr('id', this.param('id'))
+            this.domAttr('placeholder', this.param('placeholder'))
+            this.domAttr('required', true)
         }
     },
-    
-})
 
-
-
-
-Beast.decl({
-    Text: {
+    Form__textarea: {
+        inherits: 'Typo',
+        mod: {
+            Text: 'M',
+            Line: 'L'
+        }, 
+        tag: 'textarea',
         expand: function () {
-            this.domAttr('src', this.param('src'))
-            if (MissEvent.mobile) {
-                this.css({
-                    width: this.parentBlock().param('mobilewidth'),
-                })
-            } else {
-                this.css({
-                    width: this.parentBlock().param('width'),
-                })    
-            }
-            this.css({
-                marginLeft: this.parentBlock().param('left'),
-                marginTop: this.parentBlock().param('top'),
-            })
+            this.domAttr('type', this.param('type'))
+            this.domAttr('id', this.param('id'))
+            this.domAttr('placeholder', this.param('placeholder'))
+            this.domAttr('required', true)
+            this.domAttr('rows', this.param('rows'))
+            this.domAttr('cols', this.param('cols'))
         }
     },
+
+    Form__title: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Text: 'L',
+            Line: 'L'
+        }, 
+        
+    },
+
+    
     
     
 })
-
-
-Beast.decl({
-    Card: {
-        expand: function () {
-            this.domAttr('src', this.param('src'))
-            this.css({
-                width: this.parentBlock().param('width'),
-                marginLeft: this.parentBlock().param('left'),
-                marginTop: this.parentBlock().param('top'),
-            })
-        }
-    },    
-})
-
-
-
-
 /**
  * @block Grid Динамическая сетка
  * @tag base
@@ -5361,6 +5186,210 @@ function grid (num, col, gap, margin) {
     var gridWidth = col * num + gap * (num - 1) + margin * 2
     return gridWidth
 }
+Beast.decl({
+    Image: {
+        expand: function () {
+            if (MissEvent.mobile) {
+                this.css({
+                    
+                    width: this.parentBlock().param('mobilewidth'),
+                    height: this.parentBlock().param('mobileheight'),
+                    transform: 'rotate(' + this.parentBlock().param('mobilerotate') + ')',
+                    marginLeft: this.parentBlock().param('mobileleft'),
+                    marginTop: this.parentBlock().param('mobiletop'),
+                    backgroundImage: this.parentBlock().param('src'),
+                    
+                })
+            } else {
+                this.css({
+                    transform: 'rotate(' + this.param('rotate') + ')',
+                    width: this.param('width'),
+                    height: this.param('height'),
+                    marginLeft: this.param('left'),
+                    marginTop: this.param('top'),
+                    backgroundImage: 'url('+ this.param('src') +')',
+                })    
+            }
+            this.css({
+                
+                
+            })
+        },
+        on: {
+            hover: function() {
+                this.css({
+
+                    backgroundImage: 'url('+ this.parentBlock().param('hover') +')',
+                })    
+            },
+        }
+    },
+    Image__subtitle: {
+        inherits: 'Typo',
+        mod: {
+            Text: 'M',
+            Line: 'L'
+        }
+    },
+    
+})
+
+
+
+
+Beast.decl({
+    Text: {
+        expand: function () {
+            this.domAttr('src', this.param('src'))
+            if (MissEvent.mobile) {
+                this.css({
+                    width: this.parentBlock().param('mobilewidth'),
+                })
+            } else {
+                this.css({
+                    width: this.parentBlock().param('width'),
+                })    
+            }
+            this.css({
+                marginLeft: this.parentBlock().param('left'),
+                marginTop: this.parentBlock().param('top'),
+            })
+        }
+    },
+    
+    
+})
+
+
+Beast.decl({
+    Card: {
+        expand: function () {
+            this.domAttr('src', this.param('src'))
+            this.css({
+                width: this.parentBlock().param('width'),
+                marginLeft: this.parentBlock().param('left'),
+                marginTop: this.parentBlock().param('top'),
+            })
+        }
+    },    
+})
+
+
+
+
+Beast.decl({
+    Intro: {
+        expand: function () {
+            this.append(
+                this.get('video', 'image'),
+                Beast.node("content",{__context:this},"\n                    ",Beast.node("fixed",undefined,"\n                        ",Beast.node("dot",{"":true}),"\n                        ",this.get('title'),"\n                    "),"\n                    ",this.get('subtitle'),"\n                ")
+            )
+        },
+        domInit: function fn () {
+
+            var films = document.querySelectorAll('video');
+
+            var promise = new Promise(function(resolve) {
+                var loaded = 0;
+
+                films.forEach(function(v) {
+                    v.addEventListener('loadedmetadata', function() {
+                        loaded++;
+
+                    if (loaded === films.length) {
+                        resolve();
+                    }
+                    });
+                });
+            });
+
+            
+            promise.then(function() {
+              films.forEach(function(v) {
+                v.muted = true;
+                v.play();
+              });
+            });
+
+        }
+    },
+    Intro__title: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Text: 'XXL',
+            Line: 'L'
+        }
+    },
+    Intro__subtitle: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Caps: true,
+            Text: 'S',
+            Line: 'L'
+        }
+    },
+    Intro__image: {
+        
+        expand: function () {
+            this.append('')
+            this.css({
+                backgroundImage: 'url('+ this.text() +')'
+            })
+        }
+    },
+    Intro__video: {
+        tag:'video',
+        expand: function () {
+            this.domAttr('muted', 'true')
+            this.domAttr('autoplay', 'true')
+            this.domAttr('playsinline', 'true')
+            this.domAttr('loop', 'true')
+            this.domAttr('id', 'video')
+            
+            this.append(
+                Beast.node("source",{__context:this,"source":this.text()})
+            )
+        }
+    },
+    Intro__source: {
+        tag:'source',
+        expand: function () {
+            let src = this.param('source')
+            this.domAttr('src', src)
+            this.domAttr('type', 'video/mp4')
+            
+        }
+    } 
+})
+Beast
+.decl('link', {
+    tag:'a',
+    mod: {
+        type:'blue'
+    },
+    noElems:true,
+    expand: function () {
+        this.domAttr('href', this.param('href'))
+        if (this.mod('New')) {
+            this.domAttr('target', '_blank')
+        }
+    }
+})
+
+
+Beast
+.decl('footer__link', {
+    tag:'a',
+    noElems:true,
+    expand: function () {
+        this.domAttr('href', this.param('href'))
+        if (this.mod('New')) {
+            this.domAttr('target', '_blank')
+        }
+    }
+})
 Beast.decl({
     Menu: {
         domInit: function () {
@@ -5826,33 +5855,6 @@ Beast.decl({
     }
 })
 
-Beast
-.decl('link', {
-    tag:'a',
-    mod: {
-        type:'blue'
-    },
-    noElems:true,
-    expand: function () {
-        this.domAttr('href', this.param('href'))
-        if (this.mod('New')) {
-            this.domAttr('target', '_blank')
-        }
-    }
-})
-
-
-Beast
-.decl('footer__link', {
-    tag:'a',
-    noElems:true,
-    expand: function () {
-        this.domAttr('href', this.param('href'))
-        if (this.mod('New')) {
-            this.domAttr('target', '_blank')
-        }
-    }
-})
 Beast.decl({
     Section: {
 

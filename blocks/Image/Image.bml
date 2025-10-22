@@ -1,37 +1,39 @@
 Beast.decl({
     Image: {
         expand: function () {
-            this.append(
-                <image src="{this.param('src')}"></image>,
-                this.get('subtitle')
-            )
-            
-        }
-    },
-    Image__image: {
-        tag: 'img',
-        expand: function () {
-            this.domAttr('src', this.param('src'))
             if (MissEvent.mobile) {
                 this.css({
+                    
                     width: this.parentBlock().param('mobilewidth'),
                     height: this.parentBlock().param('mobileheight'),
                     transform: 'rotate(' + this.parentBlock().param('mobilerotate') + ')',
                     marginLeft: this.parentBlock().param('mobileleft'),
                     marginTop: this.parentBlock().param('mobiletop'),
+                    backgroundImage: this.parentBlock().param('src'),
+                    
                 })
             } else {
                 this.css({
-                    transform: 'rotate(' + this.parentBlock().param('rotate') + ')',
-                    width: this.parentBlock().param('width'),
-                    marginLeft: this.parentBlock().param('left'),
-                    marginTop: this.parentBlock().param('top'),
+                    transform: 'rotate(' + this.param('rotate') + ')',
+                    width: this.param('width'),
+                    height: this.param('height'),
+                    marginLeft: this.param('left'),
+                    marginTop: this.param('top'),
+                    backgroundImage: 'url('+ this.param('src') +')',
                 })    
             }
             this.css({
                 
                 
             })
+        },
+        on: {
+            hover: function() {
+                this.css({
+
+                    backgroundImage: 'url('+ this.parentBlock().param('hover') +')',
+                })    
+            },
         }
     },
     Image__subtitle: {
