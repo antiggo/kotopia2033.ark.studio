@@ -23,6 +23,11 @@
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  scrollbar-width: none /* Firefox */;
+  -ms-overflow-style: none /* IE and Edge */;
+}
+.Map__content::-webkit-scrollbar {
+  display: none /* Chrome, Safari, Opera */;
 }
 .Map__p {
   margin-top: 1.2vw;
