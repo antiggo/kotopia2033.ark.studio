@@ -4,6 +4,8 @@
     background-repeat no-repeat
     width 100%
     z-index 2
+    scale 1
+    transition scale 0.3s ease, background-image 0.3s ease
 
 // staggered variations so different Images float differently
 .Image_Challenges
@@ -15,6 +17,7 @@
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
     will-change transform
     &:hover
+        scale 1.075
         background-image url('../../assets/challenges-hover.png') !important
 
 
@@ -28,6 +31,7 @@
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
     will-change transform
     &:hover
+        scale 1.075
         background-image url('../../assets/growth-hover.png') !important
 
 .Image_Future
@@ -39,6 +43,7 @@
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
     will-change transform
     &:hover
+        scale 1.075
         background-image url('../../assets/future-hover.png') !important
 
 .Image_Not
@@ -50,6 +55,7 @@
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
     will-change transform
     &:hover
+        scale 1.075
         background-image url('../../assets/not-kotopia.png') !important
 
 .Image_Special
@@ -61,6 +67,7 @@
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
     will-change transform
     &:hover
+        scale 1.075
         background-image url('../../assets/special.png') !important
 
 
@@ -100,6 +107,8 @@
 
 @keyframes floatComposite
     0%, 100%
-        transform translate(0, 0) rotate(0)
+        translate 0 0
+        rotate 0deg
     50%
-        transform translate(var(--float-x-amplitude, 0), calc(-1 * var(--float-y-amplitude, .6vw))) rotate(var(--float-rot-amplitude, 0deg))
+        translate var(--float-x-amplitude, 0) calc(-1 * var(--float-y-amplitude, .6vw))
+        rotate var(--float-rot-amplitude, 0deg)

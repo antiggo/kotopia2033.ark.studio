@@ -90,12 +90,12 @@
 .Map__content {
   background: #241b1b;
   position: fixed;
-  right: 0.7vw;
-  top: 0.7vw;
-  bottom: 0.7vw;
+  right: 0.2vw;
+  top: 0.2vw;
+  bottom: 0.2vw;
   width: 26vw;
   height: 100vh;
-  padding: 2vw;
+  padding: 3vw;
   color: #fff;
   font-size: 1.4vw;
   line-height: 1.8vw;
@@ -2517,6 +2517,8 @@
   background-repeat: no-repeat;
   width: 100%;
   z-index: 2;
+  scale: 1;
+  transition: scale 0.3s ease, background-image 0.3s ease;
 }
 .Image_Challenges {
   --float-x-amplitude: 0vw;
@@ -2528,6 +2530,7 @@
   will-change: transform;
 }
 .Image_Challenges:hover {
+  scale: 1.075;
   background-image: url("../../assets/challenges-hover.png") !important;
 }
 .Image_Growth {
@@ -2540,6 +2543,7 @@
   will-change: transform;
 }
 .Image_Growth:hover {
+  scale: 1.075;
   background-image: url("../../assets/growth-hover.png") !important;
 }
 .Image_Future {
@@ -2552,6 +2556,7 @@
   will-change: transform;
 }
 .Image_Future:hover {
+  scale: 1.075;
   background-image: url("../../assets/future-hover.png") !important;
 }
 .Image_Not {
@@ -2564,6 +2569,7 @@
   will-change: transform;
 }
 .Image_Not:hover {
+  scale: 1.075;
   background-image: url("../../assets/not-kotopia.png") !important;
 }
 .Image_Special {
@@ -2576,6 +2582,7 @@
   will-change: transform;
 }
 .Image_Special:hover {
+  scale: 1.075;
   background-image: url("../../assets/special.png") !important;
 }
 /* .Image:nth-of-type(2)
@@ -3567,9 +3574,11 @@
 }
 @keyframes floatComposite {
   0%, 100% {
-    transform: translate(0, 0) rotate(0);
+    translate: 0 0;
+    rotate: 0deg;
   }
   50% {
-    transform: translate(var(--float-x-amplitude, 0), calc(-1 * var(--float-y-amplitude, 0.6vw))) rotate(var(--float-rot-amplitude, 0deg));
+    translate: var(--float-x-amplitude, 0) calc(-1 * var(--float-y-amplitude, 0.6vw));
+    rotate: var(--float-rot-amplitude, 0deg);
   }
 }
