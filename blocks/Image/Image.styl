@@ -52,6 +52,18 @@
     &:hover
         background-image url('../../assets/not-kotopia.png') !important
 
+.Image_Special
+    --float-x-amplitude -.4vw
+    --float-y-amplitude .9vw
+    --float-rot-amplitude .7deg
+    --float-duration 7.5s
+    --float-delay -2.3s
+    animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
+    will-change transform
+    &:hover
+        background-image url('../../assets/special.png') !important
+
+
 /* .Image:nth-of-type(2)
     --float-x-amplitude .4vw
     --float-y-amplitude .5vw
