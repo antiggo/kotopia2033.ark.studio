@@ -79,6 +79,14 @@
   background-image: url("../../assets/water.jpg");
   position: fixed;
 }
+.Map__logo {
+  width: 26vw;
+  height: 6vw;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("../../assets/logo.svg");
+  position: relative;
+}
 .Map__content {
   background: #241b1b;
   position: fixed;
