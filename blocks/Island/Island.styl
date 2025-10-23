@@ -1,10 +1,41 @@
 .Island
     position absolute
+    cursor pointer
+    font-family 'OCR'
+    text-align center    
     
     ::selection
         background #FCEF3A
         color #241B1B
     
+    &_active
+        // Add any visual styling for active Island here
+        // For example: z-index, filters, etc.
+        z-index 10
+        .Image
+            filter brightness(0) saturate(100%) invert(90%) sepia(94%) saturate(500%) hue-rotate(360deg)
+            scale 1.2
+            &:hover 
+                scale 1.2
+    &__hint
+        color #241B1B
+        background #FCEF3A
+        display inline-block
+        margin 0 auto
+        letter-spacing -.1vw
+        border-radius 10vw
+        text-transform uppercase
+        padding .2vw .6vw
+        margin-bottom 2vw
+        opacity 0
+        visibility hidden
+        transform translateY(0.5vw)
+        transition opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease
+    
+    &:hover &__hint
+        opacity 1
+        visibility visible
+        transform translateY(-0.5vw)
     &__num
         font-size 5vw
         line-height 5vw
@@ -24,13 +55,12 @@
         position relative
         margin-bottom .5vw
     &__card
+        text-align left
         position absolute
         top 0
         width 34vw
-        position relative
         background #241B1B
         color #FCEF3A
-        font-family 'OCR'
         border-radius 1vw
         padding .8vw 1.6vw
         opacity 0

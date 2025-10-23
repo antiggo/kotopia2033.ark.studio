@@ -4220,6 +4220,125 @@ BemNode.prototype = {
 }
 
 })();
+/**
+ * @block Grid Динамическая сетка
+ * @tag base
+ */
+Beast.decl({
+    Grid: {
+        // finalMod: true,
+        mod: {
+            Col: '',                // @mod Col {number} Ширина в колонках
+            Wrap: false,            // @mod Wrap {boolean} Основной контейнер сетки
+            Margin: false,          // @mod Margin {boolean} Поля
+            MarginX: false,         // @mod MarginX {boolean} Горизонтальные поля
+            MarginY: false,         // @mod MarginY {boolean} Вертикальные поля
+            Unmargin: false,        // @mod Unmargin {boolean} Отрицательные поля
+            UnmarginX: false,       // @mod UnmarginX {boolean} Отрицательные горизоантальные поля
+            UnmarginY: false,       // @mod UnmarginY {boolean} Отрацательные вертикальные поля
+            MarginRightGap: false,  // @mod MarginRightGap {boolean} Правый отступ равен — горизоантальное поле
+            MarginLeftGap: false,   // @mod MarginLeftGap {boolean} Левый отступ равен — горизоантальное поле
+            Cell: false,            // @mod Cell {boolean} Горизонтальный отступ между соседями — межколонник
+            Row: false,             // @mod Row {boolean} Вертикальынй отступ между соседями — межколонник
+            Rows: false,            // @mod Rows {boolean} Дочерние компоненты отступают на горизонтальное поле
+            Tile: false,            // @mod Tile {boolean} Модификатор дочернего компонента (для модификатора Tiles)
+            Tiles: false,           // @mod Tiles {boolean} Дочерние компоненты плиткой с отступами в поле
+            Center: false,          // @mod Center {boolean} Выравнивание по центру
+            Hidden: false,          // @mod Hidden {boolean} Спрятать компонент
+            ColCheck: false,        // @mod ColCheck {boolean} Считать ширину в колонках
+            Ratio: '',              // @mod Ratio {1x1 1x2 3x4 ...} Пропорция
+        },
+        param: {
+            isMaxCol: false,
+        },
+        onMod: {
+            Col: {
+                '*': function (fromParentGrid) {
+                    if (fromParentGrid === undefined) {
+                        this.param('isMaxCol', this.mod('col') === 'max')
+                    }
+                }
+            }
+        },
+        onCol: undefined,
+        domInit: function () {
+            this.param('isMaxCol', this.mod('col') === 'max')
+
+            if (this.mod('ColCheck')) {
+                this.onWin('resize', this.checkColWidth)
+                requestAnimationFrame(function () {
+                    this.checkColWidth()
+                }.bind(this))
+            }
+        },
+        onAttach: function (firstTime) {
+            this.setParentGrid(!firstTime)
+        },
+        checkColWidth: function () {
+            var prop = this.css('content').slice(1,-1).split(' ')
+            var col = parseInt(prop[0])
+            var gap = parseInt(prop[1])
+            var maxCol = parseInt(prop[2])
+            var marginX = parseInt(prop[3])
+            var marginY = parseFloat(prop[4])
+
+            if (isNaN(col)) {
+                return
+            }
+
+            var width = this.domNode().offsetWidth
+            var colNum = Math.floor((width + gap) / (col + gap))
+
+            if (colNum > maxCol) {
+                colNum = maxCol
+            }
+
+            this.trigger('Col', {
+                num: colNum,
+                edge: window.innerWidth === (colNum * col + (colNum-1) * gap + marginX * 2),
+                col: col,
+                gap: gap,
+                marginX: marginX,
+                marginY: marginY,
+            })
+        },
+        setParentGrid: function (recursive, parentGrid) {
+            if (this.onCol !== undefined || this.onEdge !== undefined || this.param('isMaxCol')) {
+                var that = this
+
+                if (parentGrid === undefined) {
+                    parentGrid = this._parentNode
+                    while (parentGrid !== undefined && !(parentGrid.isKindOf('Grid') && parentGrid.mod('ColCheck'))) {
+                        parentGrid = parentGrid._parentNode
+                    }
+                }
+
+                if (parentGrid !== undefined) {
+                    if (this.onCol || this.param('isMaxCol')) {
+                        parentGrid.on('Col', function (e, data) {
+                            that.onCol && that.onCol(data.num, data.edge, data)
+                            that.param('isMaxCol') && that.mod('Col', data.num, true)
+                        })
+                    }
+                }
+            }
+
+            if (recursive !== undefined) {
+                var children = this.get('/')
+                for (var i = 0, ii = children.length; i < ii; i++) {
+                    if (children[i].isKindOf('grid') && !children[i].mod('ColCheck')) {
+                        children[i].setParentGrid(recursive, parentGrid)
+                    }
+                }
+            }
+        }
+    }
+})
+
+function grid (num, col, gap, margin) {
+    var gridWidth = col * num + gap * (num - 1) + margin * 2
+    return gridWidth
+}
 Beast.decl({
     App: {
         inherits: ['Grid', 'UIStackNavigation'],
@@ -4414,192 +4533,6 @@ Beast.decl({
     
     
 })
-/**
- * @block Grid Динамическая сетка
- * @tag base
- */
-Beast.decl({
-    Grid: {
-        // finalMod: true,
-        mod: {
-            Col: '',                // @mod Col {number} Ширина в колонках
-            Wrap: false,            // @mod Wrap {boolean} Основной контейнер сетки
-            Margin: false,          // @mod Margin {boolean} Поля
-            MarginX: false,         // @mod MarginX {boolean} Горизонтальные поля
-            MarginY: false,         // @mod MarginY {boolean} Вертикальные поля
-            Unmargin: false,        // @mod Unmargin {boolean} Отрицательные поля
-            UnmarginX: false,       // @mod UnmarginX {boolean} Отрицательные горизоантальные поля
-            UnmarginY: false,       // @mod UnmarginY {boolean} Отрацательные вертикальные поля
-            MarginRightGap: false,  // @mod MarginRightGap {boolean} Правый отступ равен — горизоантальное поле
-            MarginLeftGap: false,   // @mod MarginLeftGap {boolean} Левый отступ равен — горизоантальное поле
-            Cell: false,            // @mod Cell {boolean} Горизонтальный отступ между соседями — межколонник
-            Row: false,             // @mod Row {boolean} Вертикальынй отступ между соседями — межколонник
-            Rows: false,            // @mod Rows {boolean} Дочерние компоненты отступают на горизонтальное поле
-            Tile: false,            // @mod Tile {boolean} Модификатор дочернего компонента (для модификатора Tiles)
-            Tiles: false,           // @mod Tiles {boolean} Дочерние компоненты плиткой с отступами в поле
-            Center: false,          // @mod Center {boolean} Выравнивание по центру
-            Hidden: false,          // @mod Hidden {boolean} Спрятать компонент
-            ColCheck: false,        // @mod ColCheck {boolean} Считать ширину в колонках
-            Ratio: '',              // @mod Ratio {1x1 1x2 3x4 ...} Пропорция
-        },
-        param: {
-            isMaxCol: false,
-        },
-        onMod: {
-            Col: {
-                '*': function (fromParentGrid) {
-                    if (fromParentGrid === undefined) {
-                        this.param('isMaxCol', this.mod('col') === 'max')
-                    }
-                }
-            }
-        },
-        onCol: undefined,
-        domInit: function () {
-            this.param('isMaxCol', this.mod('col') === 'max')
-
-            if (this.mod('ColCheck')) {
-                this.onWin('resize', this.checkColWidth)
-                requestAnimationFrame(function () {
-                    this.checkColWidth()
-                }.bind(this))
-            }
-        },
-        onAttach: function (firstTime) {
-            this.setParentGrid(!firstTime)
-        },
-        checkColWidth: function () {
-            var prop = this.css('content').slice(1,-1).split(' ')
-            var col = parseInt(prop[0])
-            var gap = parseInt(prop[1])
-            var maxCol = parseInt(prop[2])
-            var marginX = parseInt(prop[3])
-            var marginY = parseFloat(prop[4])
-
-            if (isNaN(col)) {
-                return
-            }
-
-            var width = this.domNode().offsetWidth
-            var colNum = Math.floor((width + gap) / (col + gap))
-
-            if (colNum > maxCol) {
-                colNum = maxCol
-            }
-
-            this.trigger('Col', {
-                num: colNum,
-                edge: window.innerWidth === (colNum * col + (colNum-1) * gap + marginX * 2),
-                col: col,
-                gap: gap,
-                marginX: marginX,
-                marginY: marginY,
-            })
-        },
-        setParentGrid: function (recursive, parentGrid) {
-            if (this.onCol !== undefined || this.onEdge !== undefined || this.param('isMaxCol')) {
-                var that = this
-
-                if (parentGrid === undefined) {
-                    parentGrid = this._parentNode
-                    while (parentGrid !== undefined && !(parentGrid.isKindOf('Grid') && parentGrid.mod('ColCheck'))) {
-                        parentGrid = parentGrid._parentNode
-                    }
-                }
-
-                if (parentGrid !== undefined) {
-                    if (this.onCol || this.param('isMaxCol')) {
-                        parentGrid.on('Col', function (e, data) {
-                            that.onCol && that.onCol(data.num, data.edge, data)
-                            that.param('isMaxCol') && that.mod('Col', data.num, true)
-                        })
-                    }
-                }
-            }
-
-            if (recursive !== undefined) {
-                var children = this.get('/')
-                for (var i = 0, ii = children.length; i < ii; i++) {
-                    if (children[i].isKindOf('grid') && !children[i].mod('ColCheck')) {
-                        children[i].setParentGrid(recursive, parentGrid)
-                    }
-                }
-            }
-        }
-    }
-})
-
-function grid (num, col, gap, margin) {
-    var gridWidth = col * num + gap * (num - 1) + margin * 2
-    return gridWidth
-}
-Beast.decl({
-    Image: {
-        expand: function () {
-            if (MissEvent.mobile) {
-                this.css({
-                    width: this.parentBlock().param('mobilewidth'),
-                    height: this.parentBlock().param('mobileheight'),
-                })
-            } else {
-                this.empty()
-                this.css({
-                    width: this.param('width'),
-                    height: this.param('height'),
-                })    
-            }
-            this.css({
-                backgroundImage: 'url('+ this.text() +')',
-            })
-        },
-        
-    },
-    
-})
-
-
-
-
-Beast.decl({
-    Text: {
-        expand: function () {
-            this.domAttr('src', this.param('src'))
-            if (MissEvent.mobile) {
-                this.css({
-                    width: this.parentBlock().param('mobilewidth'),
-                })
-            } else {
-                this.css({
-                    width: this.parentBlock().param('width'),
-                })    
-            }
-            this.css({
-                marginLeft: this.parentBlock().param('left'),
-                marginTop: this.parentBlock().param('top'),
-            })
-        }
-    },
-    
-    
-})
-
-
-Beast.decl({
-    Card: {
-        expand: function () {
-            this.domAttr('src', this.param('src'))
-            this.css({
-                width: this.parentBlock().param('width'),
-                marginLeft: this.parentBlock().param('left'),
-                marginTop: this.parentBlock().param('top'),
-            })
-        }
-    },    
-})
-
-
-
-
 Beast.decl({
     Intro: {
         expand: function () {
@@ -4686,8 +4619,103 @@ Beast.decl({
         }
     } 
 })
+Beast.decl({
+    Image: {
+        expand: function () {
+            if (MissEvent.mobile) {
+                this.css({
+                    width: this.parentBlock().param('mobilewidth'),
+                    height: this.parentBlock().param('mobileheight'),
+                })
+            } else {
+                this.empty()
+                this.css({
+                    width: this.param('width'),
+                    height: this.param('height'),
+                })    
+            }
+            this.css({
+                backgroundImage: 'url('+ this.text() +')',
+            })
+        },
+        
+    },
+    
+})
+
+
+
+
+Beast.decl({
+    Text: {
+        expand: function () {
+            this.domAttr('src', this.param('src'))
+            if (MissEvent.mobile) {
+                this.css({
+                    width: this.parentBlock().param('mobilewidth'),
+                })
+            } else {
+                this.css({
+                    width: this.parentBlock().param('width'),
+                })    
+            }
+            this.css({
+                marginLeft: this.parentBlock().param('left'),
+                marginTop: this.parentBlock().param('top'),
+            })
+        }
+    },
+    
+    
+})
+
+
+Beast.decl({
+    Card: {
+        expand: function () {
+            this.domAttr('src', this.param('src'))
+            this.css({
+                width: this.parentBlock().param('width'),
+                marginLeft: this.parentBlock().param('left'),
+                marginTop: this.parentBlock().param('top'),
+            })
+        }
+    },    
+})
+
+
+
+
+Beast
+.decl('link', {
+    tag:'a',
+    mod: {
+        type:'blue'
+    },
+    noElems:true,
+    expand: function () {
+        this.domAttr('href', this.param('href'))
+        if (this.mod('New')) {
+            this.domAttr('target', '_blank')
+        }
+    }
+})
+
+
+Beast
+.decl('footer__link', {
+    tag:'a',
+    noElems:true,
+    expand: function () {
+        this.domAttr('href', this.param('href'))
+        if (this.mod('New')) {
+            this.domAttr('target', '_blank')
+        }
+    }
+})
 // Global state to track currently active Island
 var activeIsland = null;
+var clickOutsideInitialized = false;
 
 Beast.decl({
     Island: {
@@ -4696,11 +4724,40 @@ Beast.decl({
                 marginLeft: this.param('left'),
                 marginTop: this.param('top'),
             })  
+            this.append(
+                this.get('hint'),
+                this.get()
+            )
         },
         domInit: function () {
             var self = this;
             
+            // Initialize global click-outside handler only once
+            if (!clickOutsideInitialized) {
+                clickOutsideInitialized = true;
+                document.addEventListener('click', function(e) {
+                    // Check if click is outside all Islands
+                    var clickedInsideIsland = e.target.closest('.Island');
+                    
+                    if (!clickedInsideIsland && activeIsland) {
+                        activeIsland.mod('active', false);
+                        activeIsland = null;
+                    }
+                });
+            }
+            
             this.domNode().addEventListener('click', function(e) {
+                // Check if click is on the card itself
+                var clickedOnCard = e.target.closest('.Island__card');
+                
+                // If clicking on the card, just stop propagation and don't toggle
+                if (clickedOnCard) {
+                    e.stopPropagation();
+                    return;
+                }
+                
+                e.stopPropagation(); // Prevent the document click handler
+                
                 // Check if this Island is currently active
                 var isCurrentlyActive = activeIsland === self;
                 
@@ -4747,33 +4804,6 @@ Beast.decl({
         
     },
     
-})
-Beast
-.decl('link', {
-    tag:'a',
-    mod: {
-        type:'blue'
-    },
-    noElems:true,
-    expand: function () {
-        this.domAttr('href', this.param('href'))
-        if (this.mod('New')) {
-            this.domAttr('target', '_blank')
-        }
-    }
-})
-
-
-Beast
-.decl('footer__link', {
-    tag:'a',
-    noElems:true,
-    expand: function () {
-        this.domAttr('href', this.param('href'))
-        if (this.mod('New')) {
-            this.domAttr('target', '_blank')
-        }
-    }
 })
 Beast.decl({
     Menu: {
@@ -4866,6 +4896,22 @@ Beast.decl({
         },   
     }
 })
+Beast.decl({
+    Paper: {
+        expand: function () {
+            this.append(
+                Beast.node("dot",{__context:this,"Top":true}),
+                Beast.node("dot",{__context:this,"MiddleTop":true}),
+                Beast.node("dot",{__context:this,"MiddleBottom":true}),
+                Beast.node("dot",{__context:this,"Bottom":true}),
+                Beast.node("content",{__context:this},"\n                    ",this.get('title', 'text', 'author', 'date'),"\n                "),
+                Beast.node("signature",{__context:this,"":true})
+            )
+        }
+    },
+    
+})
+
 /**
  * @block Overlay Интерфейс модальных окон
  * @dep UINavigation grid Typo Control
@@ -5168,101 +5214,6 @@ Beast.decl({
 })
 
 Beast.decl({
-    Paper: {
-        expand: function () {
-            this.append(
-                Beast.node("dot",{__context:this,"Top":true}),
-                Beast.node("dot",{__context:this,"MiddleTop":true}),
-                Beast.node("dot",{__context:this,"MiddleBottom":true}),
-                Beast.node("dot",{__context:this,"Bottom":true}),
-                Beast.node("content",{__context:this},"\n                    ",this.get('title', 'text', 'author', 'date'),"\n                "),
-                Beast.node("signature",{__context:this,"":true})
-            )
-        }
-    },
-    
-})
-
-Beast.decl({
-    Parallax: {
-        expand: function () {
-            this.append()
-            this.css({
-                width: this.param('width'),
-                height: this.param('height')
-            })  
-        }
-    },
-    Parallax__image: {
-        expand: function () {
-            this.empty()
-            this.css({
-                backgroundImage: 'url('+ this.text('') +')',
-                width: this.parentBlock().param('width'),
-                height: this.parentBlock().param('height'),
-                backgroundSize: this.parentBlock().param('width')
-            })
-        },
-        domInit: function fn() {
-            const parallaxImage = this.domNode();
-            if (!parallaxImage) return;
-            
-            // Get speed parameter, default to 50 if not specified
-            const defaultSpeed = this.param('speed') || 50;
-            
-            function updateParallax() {
-                const rect = parallaxImage.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-                const elementTop = rect.top;
-                const elementHeight = rect.height;
-                const elementCenter = elementTop + elementHeight / 2;
-                const viewportCenter = windowHeight / 2;
-                
-                // Calculate distance from viewport center (-1 to 1)
-                const distance = (viewportCenter - elementCenter) / (windowHeight / 2);
-                
-                // Check if we're on mobile (screen width <= 767px)
-                const isMobile = window.innerWidth <= 767;
-                // Use original speed for desktop, reduced speed for mobile
-                const speed = isMobile ? defaultSpeed * 0.2 : defaultSpeed;
-                
-                // Apply reversed parallax transform - negative to scroll up when scrolling down
-                const parallaxOffset = -distance * speed;
-                parallaxImage.style.transform = `translateY(${parallaxOffset}px)`;
-            }
-            
-            // Add scroll event listener
-            window.addEventListener('scroll', updateParallax);
-            
-            // Initial call
-            updateParallax();
-        }
-    }
-})
-
-Beast.decl({
-    Section: {
-
-        expand: function () {
-            if (this.mod('TextCenter')) {
-                this.append(
-                    Beast.node("wrap",{__context:this},"\n                        ",Beast.node("item",{"Text":true},"\n                            ",this.get('i'),"\n                            ",this.get('Image'),"\n                            ",this.get('title', 'text'),"\n                        "),"\n                    ")
-                )
-            } else {
-                this.append(
-                    Beast.node("wrap",{__context:this},"\n                        \n                        ",Beast.node("item",{"Image":true},"\n                            ",this.get('Image', 'side'),"\n                        "),"\n\n                        ",Beast.node("item",{"Text":true},"\n                            ",this.get('title', 'text', 'Paper'),"\n                        "),"\n                    ")
-                )
-            }
-            
-        }
-    },
-   
-    
-})
-
-
-
-Beast.decl({
 
     /**
      * @block UINavigation Компонент паттерна навигации
@@ -5556,6 +5507,85 @@ Beast.decl({
             }
 
             this.append(this.get('/'))
+        }
+    }
+})
+
+Beast.decl({
+    Section: {
+
+        expand: function () {
+            if (this.mod('TextCenter')) {
+                this.append(
+                    Beast.node("wrap",{__context:this},"\n                        ",Beast.node("item",{"Text":true},"\n                            ",this.get('i'),"\n                            ",this.get('Image'),"\n                            ",this.get('title', 'text'),"\n                        "),"\n                    ")
+                )
+            } else {
+                this.append(
+                    Beast.node("wrap",{__context:this},"\n                        \n                        ",Beast.node("item",{"Image":true},"\n                            ",this.get('Image', 'side'),"\n                        "),"\n\n                        ",Beast.node("item",{"Text":true},"\n                            ",this.get('title', 'text', 'Paper'),"\n                        "),"\n                    ")
+                )
+            }
+            
+        }
+    },
+   
+    
+})
+
+
+
+Beast.decl({
+    Parallax: {
+        expand: function () {
+            this.append()
+            this.css({
+                width: this.param('width'),
+                height: this.param('height')
+            })  
+        }
+    },
+    Parallax__image: {
+        expand: function () {
+            this.empty()
+            this.css({
+                backgroundImage: 'url('+ this.text('') +')',
+                width: this.parentBlock().param('width'),
+                height: this.parentBlock().param('height'),
+                backgroundSize: this.parentBlock().param('width')
+            })
+        },
+        domInit: function fn() {
+            const parallaxImage = this.domNode();
+            if (!parallaxImage) return;
+            
+            // Get speed parameter, default to 50 if not specified
+            const defaultSpeed = this.param('speed') || 50;
+            
+            function updateParallax() {
+                const rect = parallaxImage.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const elementTop = rect.top;
+                const elementHeight = rect.height;
+                const elementCenter = elementTop + elementHeight / 2;
+                const viewportCenter = windowHeight / 2;
+                
+                // Calculate distance from viewport center (-1 to 1)
+                const distance = (viewportCenter - elementCenter) / (windowHeight / 2);
+                
+                // Check if we're on mobile (screen width <= 767px)
+                const isMobile = window.innerWidth <= 767;
+                // Use original speed for desktop, reduced speed for mobile
+                const speed = isMobile ? defaultSpeed * 0.2 : defaultSpeed;
+                
+                // Apply reversed parallax transform - negative to scroll up when scrolling down
+                const parallaxOffset = -distance * speed;
+                parallaxImage.style.transform = `translateY(${parallaxOffset}px)`;
+            }
+            
+            // Add scroll event listener
+            window.addEventListener('scroll', updateParallax);
+            
+            // Initial call
+            updateParallax();
         }
     }
 })

@@ -1,5 +1,6 @@
 // Global state to track currently active Island
 var activeIsland = null;
+var clickOutsideInitialized = false;
 
 Beast.decl({
     Island: {
@@ -8,11 +9,40 @@ Beast.decl({
                 marginLeft: this.param('left'),
                 marginTop: this.param('top'),
             })  
+            this.append(
+                this.get('hint'),
+                this.get()
+            )
         },
         domInit: function () {
             var self = this;
             
+            // Initialize global click-outside handler only once
+            if (!clickOutsideInitialized) {
+                clickOutsideInitialized = true;
+                document.addEventListener('click', function(e) {
+                    // Check if click is outside all Islands
+                    var clickedInsideIsland = e.target.closest('.Island');
+                    
+                    if (!clickedInsideIsland && activeIsland) {
+                        activeIsland.mod('active', false);
+                        activeIsland = null;
+                    }
+                });
+            }
+            
             this.domNode().addEventListener('click', function(e) {
+                // Check if click is on the card itself
+                var clickedOnCard = e.target.closest('.Island__card');
+                
+                // If clicking on the card, just stop propagation and don't toggle
+                if (clickedOnCard) {
+                    e.stopPropagation();
+                    return;
+                }
+                
+                e.stopPropagation(); // Prevent the document click handler
+                
                 // Check if this Island is currently active
                 var isCurrentlyActive = activeIsland === self;
                 

@@ -70,6 +70,33 @@
   font-display: swap;
 }
 /* CUT THE FILE HERE */
+.Border {
+  background: #fcef3a;
+  z-index: 9999;
+  position: fixed;
+}
+.Border_Top,
+.Border_Bottom {
+  height: 0.8vw;
+  width: 100%;
+}
+.Border_Top {
+  top: 0;
+}
+.Border_Bottom {
+  bottom: 0;
+}
+.Border_Left,
+.Border_Right {
+  width: 0.8vw;
+  height: 100%;
+}
+.Border_Left {
+  left: 0;
+}
+.Border_Right {
+  right: 0;
+}
 .Map__water {
   width: 100%;
   height: 100vh;
@@ -78,7 +105,8 @@
   background-color: #000;
   background-image: url("../../assets/water.jpg");
   position: fixed;
-  top: 0;
+}
+.Map__water top 0 {
   box-shadow: inset 0 0 0 0.8vw #fcef3a;
 }
 .Map__logo {
@@ -166,7 +194,7 @@
   font-family: 'Times New Roman';
   font-size: 1.1vw;
   line-height: 1.3vw;
-  letter-spacing: -0.09vw;
+  letter-spacing: -0.1vw;
   overflow-x: hidden;
   overflow-y: auto;
   background: #dadada;
@@ -2516,7 +2544,7 @@
 }
 /* CUT THE FILE HERE */
 .Image {
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   width: 100%;
   z-index: 2;
@@ -2770,6 +2798,9 @@
 /* CUT THE FILE HERE */
 .Island {
   position: absolute;
+  cursor: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjIiIGhlaWdodD0iMjgiIHZpZXdCb3g9IjAgMCAyMiAyOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzE1NF8xNDgpIj4KPHBhdGggZD0iTTIgMkg0TDIyIDIwSDEwTDIgMjhWMloiIGZpbGw9IiNGQ0VGM0EiLz4KPHBhdGggZD0iTTQgMkgyVjI2SDRWMjhIMFYwSDRWMlpNNiAyNkg0VjI0SDZWMjZaTTggMjRINlYyMkg4VjI0Wk0yMiAyMkg4VjIwSDIwVjE4SDIyVjIyWk0yMCAxOEgxOFYxNkgyMFYxOFpNMTggMTZIMTZWMTRIMThWMTZaTTE2IDE0SDE0VjEySDE2VjE0Wk0xNCAxMkgxMlYxMEgxNFYxMlpNMTIgMTBIMTBWOEgxMlYxMFpNMTAgOEg4VjZIMTBWOFpNOCA2SDZWNEg4VjZaTTYgNEg0VjJINlY0WiIgZmlsbD0iIzI0MUIxQiIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzE1NF8xNDgiPgo8cmVjdCB3aWR0aD0iMjIiIGhlaWdodD0iMjgiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg=="), auto;
+  font-family: 'OCR';
+  text-align: center;
 }
 .Island ::-moz-selection {
   background: #fcef3a;
@@ -2778,6 +2809,36 @@
 .Island ::selection {
   background: #fcef3a;
   color: #241b1b;
+}
+.Island_active {
+  z-index: 10;
+}
+.Island_active .Image {
+  filter: brightness(0) saturate(100%) invert(90%) sepia(94%) saturate(500%) hue-rotate(360deg);
+  scale: 1.2;
+}
+.Island_active .Image:hover {
+  scale: 1.2;
+}
+.Island__hint {
+  color: #241b1b;
+  background: #fcef3a;
+  display: inline-block;
+  margin: 0 auto;
+  letter-spacing: -0.1vw;
+  border-radius: 10vw;
+  text-transform: uppercase;
+  padding: 0.2vw 0.6vw;
+  margin-bottom: 2vw;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(0.5vw);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+}
+.Island:hover .Island__hint {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(-0.5vw);
 }
 .Island__num {
   font-size: 5vw;
@@ -2802,13 +2863,12 @@
   margin-bottom: 0.5vw;
 }
 .Island__card {
+  text-align: left;
   position: absolute;
   top: 0;
   width: 34vw;
-  position: relative;
   background: #241b1b;
   color: #fcef3a;
-  font-family: 'OCR';
   border-radius: 1vw;
   padding: 0.8vw 1.6vw;
   opacity: 0;
