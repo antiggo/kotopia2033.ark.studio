@@ -4242,660 +4242,7 @@ Beast.decl({
         },
         domInit: function fn() {
 
-            this.inherited(fn)
-            history.pushState({}, '', '')
-
-            // Menu items scroll detection for charcoal section overlap
-            var menuItems = document.querySelectorAll('.menu__item');
-            var charcoalSection = document.querySelector('[class*="charcoal" i]') || 
-                                  document.querySelector('[class*="Charcoal"]') ||
-                                  document.querySelector('[class*="sidebar"]');
             
-            if (menuItems.length > 0 && charcoalSection) {
-                function checkMenuItemsOverlap() {
-                    var charcoalRect = charcoalSection.getBoundingClientRect();
-                    
-                    menuItems.forEach(function(item) {
-                        var itemRect = item.getBoundingClientRect();
-                        
-                        // Check if this specific menu item overlaps with charcoal section
-                        var isOverlapping = !(itemRect.bottom < charcoalRect.top || 
-                                              itemRect.top > charcoalRect.bottom);
-                        
-                        if (isOverlapping) {
-                            item.classList.add('menu__item_overcharcoal');
-                        } else {
-                            item.classList.remove('menu__item_overcharcoal');
-                        }
-                    });
-                }
-                
-                window.addEventListener('scroll', checkMenuItemsOverlap);
-                checkMenuItemsOverlap();
-            }
-
-            // Action elements shuffling animation using shared helper (excluding .Action and .Footer__action which are handled in their respective blocks)
-            window.createCharacterShuffleAnimation({
-                selector: '.Button_Type_Action, .CaseAction',
-                animationDirection: 'right-to-left',
-                sizingStrategy: 'lock',
-                intervalSpeed: 30,
-                enableMouseleave: true,
-                storeOriginalText: true
-            })
-
-            // Parallax and blur effects using shared helper
-            window.createParallaxAnimation({
-                elementGroups: [
-                    {
-                        selector: '.Text__item',
-                        parallaxSpeed: 1.0, // No parallax movement - blur only
-                        maxBlur: 12, // Medium intensity blur
-                        blurTrigger: 0.20,
-                        blurPoint: 0.15
-                    }
-                ]
-            })
-
-            // Text__item fade-in with character animation on page load
-            const textItems = document.querySelectorAll('.Text__item')
-
-            
-            textItems.forEach((element, index) => {
-
-                
-                // Start animation after a delay based on index
-                setTimeout(() => {
-                    // Simple fade in and unblur
-                    element.classList.add('Text__item_loaded')
-
-                    
-                }, index * 1000) // 1 second delay between each item
-            })
-
-
-
-            // Services__item scroll-triggered fade/unblur animation
-            const servicesItems = document.querySelectorAll('.Services__item')
-
-            
-            if (servicesItems.length > 0) {
-                const observerOptions = {
-                    root: null,
-                    rootMargin: '-20% 0px -20% 0px', // Trigger when 20% into viewport
-                    threshold: 0.3
-                }
-                
-                const servicesObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            // Reset and start animation when entering viewport
-                            if (!entry.target.classList.contains('Services__item_loaded')) {
-                                let animatedItemsCount = 0
-                                
-                                // Reset all services items first
-                                servicesItems.forEach(item => {
-                                    item.classList.remove('Services__item_loaded')
-                                })
-                                
-                                // Animate all services items in sequence
-                                servicesItems.forEach((item, index) => {
-                                    setTimeout(() => {
-                                        item.classList.add('Services__item_loaded')
-                                        
-                                        // Animate the digit (::before element content) after fade-in starts
-                                        setTimeout(() => {
-                                            animateServiceDigit(item, index + 1)
-                                        }, 200) // Start digit animation 200ms after fade begins
-                                        
-
-                                    }, index * 200) // 200ms delay between each item
-                                })
-                            }
-                        } else {
-                            // Reset when leaving viewport (scrolling away)
-                            entry.target.classList.remove('Services__item_loaded')
-                        }
-                    })
-                }, observerOptions)
-                
-                // Function to animate the digit in ::before element
-                function animateServiceDigit(element, finalDigit) {
-                    const randomChars = '0123456789'
-                    let swapsRemaining = 6 // Short animation - 6 swaps
-                    const digitStr = finalDigit.toString()
-                    
-                    // Create a temporary span to hold the animated digit
-                    const digitSpan = document.createElement('span')
-                    digitSpan.style.cssText = `
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        color: #f00;
-                        font-size: 4vw;
-                        line-height: 4vw;
-                        display: block;
-                        z-index: 10;
-                        text-shadow: 0 0 3px #f00;
-                    `
-                    
-                    // Hide the original ::before content during animation
-                    element.style.position = 'relative'
-                    element.appendChild(digitSpan)
-                    
-                    const animationInterval = setInterval(() => {
-                        if (swapsRemaining > 0) {
-                            // Show random digit
-                            const randomChar = randomChars.charAt(Math.floor(Math.random() * randomChars.length))
-                            digitSpan.textContent = randomChar
-                            swapsRemaining--
-                        } else {
-                            // Animation complete - change to normal color and remove glow
-                            digitSpan.style.color = '#00f' // Return to normal blue color
-                            digitSpan.style.textShadow = 'none' // Remove glow effect
-                            digitSpan.textContent = digitStr
-                            clearInterval(animationInterval)
-                            
-                            // Remove temporary span after a brief moment
-                            setTimeout(() => {
-                                if (digitSpan.parentNode) {
-                                    digitSpan.parentNode.removeChild(digitSpan)
-                                }
-                            }, 100)
-                        }
-                    }, 80) // 80ms between swaps for quick animation
-                }
-                
-                // Observe all services items
-                servicesItems.forEach(item => {
-                    servicesObserver.observe(item)
-                })
-            }
-            
-            // Card scroll-triggered fade/unblur animation
-            const cardItems = document.querySelectorAll('.Card')
-
-            
-            if (cardItems.length > 0) {
-                const cardObserverOptions = {
-                    root: null,
-                    rootMargin: '0px 0px 0px 0px', // No margin - trigger exactly when entering/leaving
-                    threshold: 0.1 // Very small threshold - almost completely out of view
-                }
-                
-                let lastScrollY = window.scrollY
-                
-                const cardObserver = new IntersectionObserver((entries) => {
-                    const currentScrollY = window.scrollY
-                    const scrollingUp = currentScrollY < lastScrollY
-                    lastScrollY = currentScrollY
-                    
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            // Card is visible - animate if not already loaded
-                            if (!entry.target.classList.contains('Card_loaded')) {
-                                // Reset all cards first
-                                cardItems.forEach(card => {
-                                    card.classList.remove('Card_loaded')
-                                })
-                                
-                                // Animate all cards in sequence
-                                cardItems.forEach((card, index) => {
-                                    setTimeout(() => {
-                                        card.classList.add('Card_loaded')
-
-                                    }, index * 150) // 150ms delay between each card
-                                })
-                            }
-                        } else {
-                            // Card is NOT visible
-                            // Only reset when scrolling UP and card is out of viewport
-                            if (scrollingUp) {
-                                entry.target.classList.remove('Card_loaded')
-
-                            }
-                            // Don't reset when scrolling down (card may be above viewport)
-                        }
-                    })
-                }, cardObserverOptions)
-                
-                // Observe all card items
-                cardItems.forEach(card => {
-                    cardObserver.observe(card)
-                })
-            }
-            
-            // CaseAction scroll-triggered character swapping animation using shared helper with Intersection Observer
-            const caseActionElements = document.querySelectorAll('.CaseAction')
-            
-            if (caseActionElements.length > 0) {
-                const caseActionObserverOptions = {
-                    root: null,
-                    rootMargin: '0px 0px -20% 0px', // Trigger when 20% into viewport
-                    threshold: 0.1
-                }
-                
-                const caseActionObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting && !entry.target.hasScrollTriggered) {
-                            // Element is visible for first time - trigger character swap animation
-                            entry.target.hasScrollTriggered = true
-                            
-                            // Trigger initial animation
-                            window.triggerCharacterShuffleAnimation(entry.target, {
-                                animationDirection: 'right-to-left',
-                                sizingStrategy: 'lock',
-                                intervalSpeed: 30,
-                                storeOriginalText: true
-                            })
-                            
-                            // Start occasional repeating animations
-                            function scheduleNextAnimation() {
-                                const randomDelay = 3000 + Math.random() * 4000 // 3-7 seconds
-                                setTimeout(() => {
-                                    if (!entry.target.isAnimating) { // Only animate if not already animating
-                                        window.triggerCharacterShuffleAnimation(entry.target, {
-                                            animationDirection: 'right-to-left',
-                                            sizingStrategy: 'lock',
-                                            intervalSpeed: 30,
-                                            storeOriginalText: true
-                                        })
-                                    }
-                                    scheduleNextAnimation() // Schedule the next one
-                                }, randomDelay)
-                            }
-                            
-                            // Start the repeating cycle after initial animation completes
-                            setTimeout(() => {
-                                scheduleNextAnimation()
-                            }, 2000) // 2 second buffer after initial animation
-                        }
-                    })
-                }, caseActionObserverOptions)
-                
-                // Observe all CaseAction elements
-                caseActionElements.forEach(element => {
-                    caseActionObserver.observe(element)
-                })
-            }
-            
-            // Scroll-triggered fade/unblur animation for Case__image, About, Solution, and Review
-            const scrollAnimationElements = [
-                { selector: '.Case__image', className: 'Case__image_loaded' },
-                { selector: '.About', className: 'About_loaded' },
-                { selector: '.Solution', className: 'Solution_loaded' },
-                { selector: '.Review', className: 'Review_loaded' }
-            ]
-            
-            scrollAnimationElements.forEach(({ selector, className }) => {
-                const elements = document.querySelectorAll(selector)
-
-                
-                if (elements.length > 0) {
-                    const observerOptions = {
-                        root: null,
-                        rootMargin: '0px 0px -20% 0px', // Trigger when 20% into viewport
-                        threshold: 0.1
-                    }
-                    
-                    const elementObserver = new IntersectionObserver((entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                // Element is visible - animate
-                                entry.target.classList.add(className)
-
-                                } else {
-                                // Element is not visible - reset animation
-                                entry.target.classList.remove(className)
-
-                            }
-                        })
-                    }, observerOptions)
-                    
-                    // Observe all elements of this type
-                    elements.forEach(element => {
-                        elementObserver.observe(element)
-                    })
-                }
-            })
-
-
-            
-            // Fallback: ensure all text items are visible after 5 seconds
-                setTimeout(() => {
-                textItems.forEach(element => {
-                    if (!element.classList.contains('Text__item_loaded')) {
-                        element.classList.add('Text__item_loaded')
-                    }
-                })
-            }, 5000)
-
-            // PathOfAwakening scroll-based blur system for headline, text, and cast
-            const pathOfAwakeningHeadline = document.querySelector('.PathOfAwakening__headline');
-            const pathOfAwakeningText = document.querySelector('.PathOfAwakening__text');
-            const pathOfAwakeningCast = document.querySelector('.PathOfAwakening__cast');
-            
-            if (pathOfAwakeningHeadline) {
-                // Fade in and un-blur on page load for headline
-                setTimeout(() => {
-                    pathOfAwakeningHeadline.classList.add('PathOfAwakening__headline_loaded');
-                }, 300); // Small delay for dramatic effect
-                
-                function updateScrollBlurEffects() {
-                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    const windowHeight = window.innerHeight;
-                    
-                    // Function to calculate blur based on element position
-                    function calculateElementBlur(element, initialBlur = 3, maxBlur = 25, focusZone = 200) {
-                        if (!element) return;
-                        
-                        const rect = element.getBoundingClientRect();
-                        const elementTop = rect.top;
-                        const elementHeight = rect.height;
-                        const elementCenter = elementTop + elementHeight / 2;
-                        
-                        // Distance from element center to screen center
-                        const screenCenter = windowHeight / 2;
-                        const distanceFromCenter = Math.abs(elementCenter - screenCenter);
-                        
-                        let blurAmount;
-                        
-                        if (distanceFromCenter <= focusZone) {
-                            // In focus zone - unblur (clear)
-                            blurAmount = 0;
-                        } else {
-                            // Out of focus zone - blur based on distance
-                            const blurProgress = Math.min(1, (distanceFromCenter - focusZone) / (windowHeight / 2));
-                            blurAmount = initialBlur + (blurProgress * (maxBlur - initialBlur));
-                        }
-                        
-                        element.style.filter = `blur(${blurAmount}px)`;
-                    }
-                    
-                    // Apply blur effects to headline and cast only
-                    if (pathOfAwakeningHeadline.classList.contains('PathOfAwakening__headline_loaded')) {
-                        calculateElementBlur(pathOfAwakeningHeadline, 3, 25, 150);
-                        pathOfAwakeningHeadline.style.opacity = '1'; // Keep visible
-                    }
-                    
-                    calculateElementBlur(pathOfAwakeningCast, 3, 20, 180);
-                }
-                
-                // Add scroll event listener
-                window.addEventListener('scroll', updateScrollBlurEffects);
-                
-                // Initial call to set blur states
-                updateScrollBlurEffects();
-                
-                // Sequential word appearance for PathOfAwakening text triggered by scroll
-                const wordOne = document.querySelector('.PathOfAwakening__word_one');
-                const wordTwo = document.querySelector('.PathOfAwakening__word_two');
-                const wordThree = document.querySelector('.PathOfAwakening__word_three');
-                const wordFour = document.querySelector('.PathOfAwakening__word_four');
-                
-                if (wordOne || wordTwo || wordThree || wordFour) {
-                    let wordOneShown = false;
-                    let wordTwoShown = false;
-                    let wordThreeShown = false;
-                    let wordFourShown = false;
-                    
-                    function checkWordAppearance() {
-                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                        
-                        // Word One: fade in from 200px to 300px
-                        if (wordOne) {
-                            if (scrollTop <= 200) {
-                                wordOne.style.opacity = '0';
-                                wordOne.style.transform = 'translateY(20px)';
-                                wordOneShown = false;
-                            } else if (scrollTop > 200 && scrollTop <= 300) {
-                                const progress = (scrollTop - 200) / 100; // 0 to 1
-                                wordOne.style.opacity = progress;
-                                wordOne.style.transform = `translateY(${20 - (progress * 20)}px)`;
-                                wordOneShown = true;
-                            } else if (scrollTop > 300) {
-                                wordOne.style.opacity = '1';
-                                wordOne.style.transform = 'translateY(0px)';
-                                wordOneShown = true;
-                            }
-                        }
-                        
-                        // Word Two: fade in from 500px to 600px (requires word one)
-                        if (wordTwo && wordOneShown) {
-                            if (scrollTop <= 500) {
-                                wordTwo.style.opacity = '0';
-                                wordTwo.style.transform = 'translateY(20px)';
-                                wordTwoShown = false;
-                            } else if (scrollTop > 500 && scrollTop <= 600) {
-                                const progress = (scrollTop - 500) / 100; // 0 to 1
-                                wordTwo.style.opacity = progress;
-                                wordTwo.style.transform = `translateY(${20 - (progress * 20)}px)`;
-                                wordTwoShown = true;
-                            } else if (scrollTop > 600) {
-                                wordTwo.style.opacity = '1';
-                                wordTwo.style.transform = 'translateY(0px)';
-                                wordTwoShown = true;
-                            }
-                        }
-                        
-                        // Word Three: fade in from 800px to 900px (requires word two)
-                        if (wordThree && wordTwoShown) {
-                            if (scrollTop <= 800) {
-                                wordThree.style.opacity = '0';
-                                wordThree.style.transform = 'translateY(20px)';
-                                wordThreeShown = false;
-                            } else if (scrollTop > 800 && scrollTop <= 900) {
-                                const progress = (scrollTop - 800) / 100; // 0 to 1
-                                wordThree.style.opacity = progress;
-                                wordThree.style.transform = `translateY(${20 - (progress * 20)}px)`;
-                                wordThreeShown = true;
-                            } else if (scrollTop > 900) {
-                                wordThree.style.opacity = '1';
-                                wordThree.style.transform = 'translateY(0px)';
-                                wordThreeShown = true;
-                            }
-                        }
-                        
-                        // Word Four: fade in from 1100px to 1200px (requires word three)
-                        if (wordFour && wordThreeShown) {
-                            if (scrollTop <= 1100) {
-                                wordFour.style.opacity = '0';
-                                wordFour.style.transform = 'translateY(20px)';
-                                wordFourShown = false;
-                            } else if (scrollTop > 1100 && scrollTop <= 1200) {
-                                const progress = (scrollTop - 1100) / 100; // 0 to 1
-                                wordFour.style.opacity = progress;
-                                wordFour.style.transform = `translateY(${20 - (progress * 20)}px)`;
-                                wordFourShown = true;
-                            } else if (scrollTop > 1200) {
-                                wordFour.style.opacity = '1';
-                                wordFour.style.transform = 'translateY(0px)';
-                                wordFourShown = true;
-                            }
-                        }
-                        
-                        // Words One and Two: blur from 1000px to 1100px
-                        if (wordOne && wordOneShown && wordTwo && wordTwoShown) {
-                            if (scrollTop <= 1000) {
-                                wordOne.style.filter = 'blur(0px)';
-                                wordTwo.style.filter = 'blur(0px)';
-                            } else if (scrollTop > 1000 && scrollTop <= 1100) {
-                                const blurProgress = (scrollTop - 1000) / 100; // 0 to 1
-                                const blurAmount = blurProgress * 8; // 0 to 8px
-                                const opacityAmount = 1 - (blurProgress * 0.4); // 1 to 0.6
-                                wordOne.style.filter = `blur(${blurAmount}px)`;
-                                wordOne.style.opacity = opacityAmount;
-                                wordTwo.style.filter = `blur(${blurAmount}px)`;
-                                wordTwo.style.opacity = opacityAmount;
-                            } else if (scrollTop > 1100) {
-                                wordOne.style.filter = 'blur(8px)';
-                                wordOne.style.opacity = '0.6';
-                                wordTwo.style.filter = 'blur(8px)';
-                                wordTwo.style.opacity = '0.6';
-                            }
-                        }
-                        
-                        // Word Three: blur from 1200px to 1300px
-                        if (wordThree && wordThreeShown) {
-                            if (scrollTop <= 1200) {
-                                wordThree.style.filter = 'blur(0px)';
-                            } else if (scrollTop > 1200 && scrollTop <= 1300) {
-                                const blurProgress = (scrollTop - 1200) / 100; // 0 to 1
-                                const blurAmount = blurProgress * 8; // 0 to 8px
-                                const opacityAmount = 1 - (blurProgress * 0.4); // 1 to 0.6
-                                wordThree.style.filter = `blur(${blurAmount}px)`;
-                                wordThree.style.opacity = opacityAmount;
-                            } else if (scrollTop > 1300) {
-                                wordThree.style.filter = 'blur(8px)';
-                                wordThree.style.opacity = '0.6';
-                            }
-                        }
-                        
-                        // Word Four: blur from 1400px to 1500px
-                        if (wordFour && wordFourShown) {
-                            if (scrollTop <= 1400) {
-                                wordFour.style.filter = 'blur(0px)';
-                            } else if (scrollTop > 1400 && scrollTop <= 1500) {
-                                const blurProgress = (scrollTop - 1400) / 100; // 0 to 1
-                                const blurAmount = blurProgress * 8; // 0 to 8px
-                                const opacityAmount = 1 - (blurProgress * 0.4); // 1 to 0.6
-                                wordFour.style.filter = `blur(${blurAmount}px)`;
-                                wordFour.style.opacity = opacityAmount;
-                            } else if (scrollTop > 1500) {
-                                wordFour.style.filter = 'blur(8px)';
-                                wordFour.style.opacity = '0.6';
-                            }
-                        }
-                    }
-                    
-                    // Add to existing scroll listener
-                    const originalScrollHandler = window.onscroll;
-                    window.addEventListener('scroll', () => {
-                        checkWordAppearance();
-                    });
-                    
-                    // Initial check
-                    checkWordAppearance();
-                }
-            }
-
-            // Process step background image fade-in animation
-            // Wait for DOM to be fully loaded
-            setTimeout(() => {
-                const processSteps = document.querySelectorAll('.Process__step')
-                const cassetteContainer = document.querySelector('.Cassette')
-
-                // Initialize all process steps with opacity 0 for background images
-                processSteps.forEach(step => {
-                    step.style.position = 'relative'
-                    step.style.setProperty('--bg-opacity', '0')
-                })
-                
-                // Debug: log all cassette pieces
-                for (let i = 1; i <= 5; i++) {
-                    const piece = document.querySelector(`.Cassette_piece_${i}`)
-                }
-                
-                let fadeAnimationTriggered = false
-                
-                if (processSteps.length > 0) {
-                    // Get all process titles for glow effect
-                    const processTitles = document.querySelectorAll('.Process__title')
-                    
-                    function updateProcessAnimations() {
-                        const scrollTop = window.pageYOffset || document.documentElement.scrollTop
-                        const windowHeight = window.innerHeight
-                        
-                        // Check if first process step is in trigger range
-                        const firstStep = processSteps[0]
-                        if (firstStep) {
-                            const stepRect = firstStep.getBoundingClientRect()
-                            const stepTop = stepRect.top
-                            const triggerPoint = windowHeight * 0.5
-                            const fadeDistance = windowHeight * 0.3 // Fade over 30% of viewport height
-                            
-                            if (stepTop <= triggerPoint && stepTop > triggerPoint - fadeDistance) {
-                                // First step is in fade-in range - apply to all steps
-                                const progress = 1 - ((stepTop - (triggerPoint - fadeDistance)) / fadeDistance)
-                                const opacity = Math.max(0, Math.min(1, progress))
-                                
-                                processSteps.forEach(step => {
-                                    step.style.setProperty('--bg-opacity', opacity.toString())
-                                })
-
-                            } else if (stepTop <= triggerPoint - fadeDistance) {
-                                // First step is fully visible - all backgrounds fully visible
-                                processSteps.forEach(step => {
-                                    step.style.setProperty('--bg-opacity', '1')
-                                })
-                            } else {
-                                // First step hasn't entered fade range yet - all backgrounds hidden
-                                processSteps.forEach(step => {
-                                    step.style.setProperty('--bg-opacity', '0')
-                                })
-                            }
-                        }
-                        
-                        // Check each process title for glow effect and track active step
-                        let activeStepIndex = -1
-                        
-                        processTitles.forEach((title, index) => {
-                            const rect = title.getBoundingClientRect()
-                            const titleCenter = rect.top + rect.height / 2
-                            const viewportCenter = windowHeight / 2
-                            const glowTriggerZone = windowHeight * 0.6 // Glow when title is within 60% of viewport height
-                            
-                            // Calculate distance from viewport center
-                            const distanceFromCenter = Math.abs(titleCenter - viewportCenter)
-                            const maxDistance = glowTriggerZone / 2
-                            
-                            if (distanceFromCenter <= maxDistance) {
-                                // Title is in glow zone - add glow class
-                                title.classList.add('Process__title_glow')
-                                activeStepIndex = index
-                                
-                                // Also make the corresponding process text fully visible
-                                const processStep = title.closest('.Process__step')
-                                if (processStep) {
-                                    const processText = processStep.querySelector('.Process__text')
-                                    if (processText) {
-                                        processText.style.opacity = '1'
-                                    }
-                                }
-                            } else {
-                                // Title is out of glow zone - remove glow class
-                                title.classList.remove('Process__title_glow')
-                                
-                                // Reset process text opacity to default
-                                const processStep = title.closest('.Process__step')
-                                if (processStep) {
-                                    const processText = processStep.querySelector('.Process__text')
-                                    if (processText) {
-                                        processText.style.opacity = ''
-                                    }
-                                }
-                            }
-                        })
-                        
-                        // Fade previous steps based on active step
-                        processSteps.forEach((step, index) => {
-                            if (activeStepIndex >= 0 && index < activeStepIndex) {
-                                // This is a previous step - fade it out
-                                step.classList.add('Process__step_faded')
-                            } else {
-                                // This is current or future step - remove fade
-                                step.classList.remove('Process__step_faded')
-                            }
-                        })
-                    }
-                    
-                    // Add scroll event listener for process animations
-                    window.addEventListener('scroll', updateProcessAnimations)
-                    
-                    // Initial call
-                    updateProcessAnimations()
-                }
-            }, 1000) // Wait 1 second for DOM to be ready
 
         }
     },
@@ -5191,45 +4538,21 @@ Beast.decl({
         expand: function () {
             if (MissEvent.mobile) {
                 this.css({
-                    
                     width: this.parentBlock().param('mobilewidth'),
                     height: this.parentBlock().param('mobileheight'),
-                    transform: 'rotate(' + this.parentBlock().param('mobilerotate') + ')',
-                    marginLeft: this.parentBlock().param('mobileleft'),
-                    marginTop: this.parentBlock().param('mobiletop'),
-                    backgroundImage: this.parentBlock().param('src'),
-                    
                 })
             } else {
+                this.empty()
                 this.css({
-                    transform: 'rotate(' + this.param('rotate') + ')',
                     width: this.param('width'),
                     height: this.param('height'),
-                    marginLeft: this.param('left'),
-                    marginTop: this.param('top'),
-                    backgroundImage: 'url('+ this.param('src') +')',
                 })    
             }
             this.css({
-                
-                
+                backgroundImage: 'url('+ this.text() +')',
             })
         },
-        on: {
-            hover: function() {
-                this.css({
-
-                    backgroundImage: 'url('+ this.parentBlock().param('hover') +')',
-                })    
-            },
-        }
-    },
-    Image__subtitle: {
-        inherits: 'Typo',
-        mod: {
-            Text: 'M',
-            Line: 'L'
-        }
+        
     },
     
 })
@@ -5362,6 +4685,68 @@ Beast.decl({
             
         }
     } 
+})
+// Global state to track currently active Island
+var activeIsland = null;
+
+Beast.decl({
+    Island: {
+        expand: function () {
+            this.css({
+                marginLeft: this.param('left'),
+                marginTop: this.param('top'),
+            })  
+        },
+        domInit: function () {
+            var self = this;
+            
+            this.domNode().addEventListener('click', function(e) {
+                // Check if this Island is currently active
+                var isCurrentlyActive = activeIsland === self;
+                
+                // Close previously active Island if any
+                if (activeIsland && activeIsland !== self) {
+                    activeIsland.mod('active', false);
+                }
+                
+                // Toggle current Island
+                if (isCurrentlyActive) {
+                    self.mod('active', false);
+                    activeIsland = null;
+                } else {
+                    self.mod('active', true);
+                    activeIsland = self;
+                }
+            });
+        },
+        
+    },
+    Island__card: {
+        expand: function () {
+            var num = this.parentBlock().param('num');
+            var formattedNum = String(num).padStart(2, '0');
+            this.css({
+                left: this.param('left'),
+                top: this.param('top'),
+            })  
+            this.append(
+                Beast.node("head",{__context:this},"\n                    ",Beast.node("num",undefined,formattedNum),"\n                    ",Beast.node("side",undefined,"\n                        ",this.get('title'),"\n                        ",Beast.node("subtitle",undefined,"block:0936/179.99"),"\n                    "),"\n                "),
+                Beast.node("line",{__context:this,"":true}),
+                Beast.node("line",{__context:this,"":true}),
+                Beast.node("line",{__context:this,"":true}),
+                Beast.node("line",{__context:this,"":true}),
+                this.get('text'),
+                Beast.node("footer",{__context:this,"":true})
+            )
+        },
+        domInit: function fn() {
+
+            
+
+        }
+        
+    },
+    
 })
 Beast
 .decl('link', {

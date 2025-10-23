@@ -1,0 +1,61 @@
+.Island
+    position absolute
+    
+    ::selection
+        background #FCEF3A
+        color #241B1B
+    
+    &__num
+        font-size 5vw
+        line-height 5vw
+        letter-spacing -.5vw
+    &__side
+        position absolute
+        right 0
+        top .7vw
+        text-transform uppercase
+        font-size 1.8vw
+        line-height 2vw
+        letter-spacing -.12vw
+        text-align right
+    &__subtitle
+        color #4B4B4B
+    &__head
+        position relative
+        margin-bottom .5vw
+    &__card
+        position absolute
+        top 0
+        width 34vw
+        position relative
+        background #241B1B
+        color #FCEF3A
+        font-family 'OCR'
+        border-radius 1vw
+        padding .8vw 1.6vw
+        opacity 0
+        visibility hidden
+        pointer-events none
+    
+    &_active &__card
+        opacity 1
+        visibility visible
+        pointer-events auto
+    &__footer
+        width 100%
+        height 4.8vw
+        background-size contain
+        background-repeat no-repeat
+        background-image url('../../assets/card-footer.svg')
+    &__line
+        
+        width 100%
+        height .2vw
+        background-size contain
+        background-repeat no-repeat
+        background-image url('../../assets/card-line.svg')
+    &__text
+        padding 1vw 0 2vw 0
+    &__p
+        & + &
+            margin-top 1vw

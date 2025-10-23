@@ -1,0 +1,68 @@
+// Global state to track currently active Island
+var activeIsland = null;
+
+Beast.decl({
+    Island: {
+        expand: function () {
+            this.css({
+                marginLeft: this.param('left'),
+                marginTop: this.param('top'),
+            })  
+        },
+        domInit: function () {
+            var self = this;
+            
+            this.domNode().addEventListener('click', function(e) {
+                // Check if this Island is currently active
+                var isCurrentlyActive = activeIsland === self;
+                
+                // Close previously active Island if any
+                if (activeIsland && activeIsland !== self) {
+                    activeIsland.mod('active', false);
+                }
+                
+                // Toggle current Island
+                if (isCurrentlyActive) {
+                    self.mod('active', false);
+                    activeIsland = null;
+                } else {
+                    self.mod('active', true);
+                    activeIsland = self;
+                }
+            });
+        },
+        
+    },
+    Island__card: {
+        expand: function () {
+            var num = this.parentBlock().param('num');
+            var formattedNum = String(num).padStart(2, '0');
+            this.css({
+                left: this.param('left'),
+                top: this.param('top'),
+            })  
+            this.append(
+                <head>
+                    <num>{formattedNum}</num>
+                    <side>
+                        {this.get('title')}
+                        <subtitle>block:0936/179.99</subtitle>
+                    </side>
+                </head>,
+                <line />,
+                <line />,
+                <line />,
+                <line />,
+                this.get('text'),
+                <footer />
+            )
+        },
+        domInit: function fn() {
+
+            
+
+        }
+        
+    },
+    
+})

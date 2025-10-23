@@ -3,45 +3,21 @@ Beast.decl({
         expand: function () {
             if (MissEvent.mobile) {
                 this.css({
-                    
                     width: this.parentBlock().param('mobilewidth'),
                     height: this.parentBlock().param('mobileheight'),
-                    transform: 'rotate(' + this.parentBlock().param('mobilerotate') + ')',
-                    marginLeft: this.parentBlock().param('mobileleft'),
-                    marginTop: this.parentBlock().param('mobiletop'),
-                    backgroundImage: this.parentBlock().param('src'),
-                    
                 })
             } else {
+                this.empty()
                 this.css({
-                    transform: 'rotate(' + this.param('rotate') + ')',
                     width: this.param('width'),
                     height: this.param('height'),
-                    marginLeft: this.param('left'),
-                    marginTop: this.param('top'),
-                    backgroundImage: 'url('+ this.param('src') +')',
                 })    
             }
             this.css({
-                
-                
+                backgroundImage: 'url('+ this.text() +')',
             })
         },
-        on: {
-            hover: function() {
-                this.css({
-
-                    backgroundImage: 'url('+ this.parentBlock().param('hover') +')',
-                })    
-            },
-        }
-    },
-    Image__subtitle: {
-        inherits: 'Typo',
-        mod: {
-            Text: 'M',
-            Line: 'L'
-        }
+        
     },
     
 })

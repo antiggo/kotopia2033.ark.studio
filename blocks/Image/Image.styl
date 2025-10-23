@@ -1,13 +1,17 @@
 .Image
-    position absolute
+    
     background-size contain
     background-repeat no-repeat
     width 100%
     z-index 2
     scale 1
     transition scale 0.3s ease, background-image 0.3s ease
+    &:hover 
+        scale 1.075
+        cursor pointer
+        will-change transform
 
-// staggered variations so different Images float differently
+
 .Image_Challenges
     --float-x-amplitude 0vw
     --float-y-amplitude .8vw
@@ -15,10 +19,8 @@
     --float-duration 6s
     --float-delay -0.7s
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
-    will-change transform
     &:hover
-        scale 1.075
-        background-image url('../../assets/challenges-hover.png') !important
+        /* background-image url('../../assets/challenges-hover.png') !important */
 
 
 
@@ -29,10 +31,8 @@
     --float-duration 8s
     --float-delay -0.3s
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
-    will-change transform
     &:hover
-        scale 1.075
-        background-image url('../../assets/growth-hover.png') !important
+        /* background-image url('../../assets/growth-hover.png') !important */
 
 .Image_Future
     --float-x-amplitude .3vw
@@ -41,10 +41,8 @@
     --float-duration 7s
     --float-delay -1.2s
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
-    will-change transform
     &:hover
-        scale 1.075
-        background-image url('../../assets/future-hover.png') !important
+        /* background-image url('../../assets/future-hover.png') !important */
 
 .Image_Not
     --float-x-amplitude 0vw
@@ -53,10 +51,8 @@
     --float-duration 6s
     --float-delay -1s
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
-    will-change transform
     &:hover
-        scale 1.075
-        background-image url('../../assets/not-kotopia.png') !important
+        /* background-image url('../../assets/not-kotopia.png') !important */
 
 .Image_Special
     --float-x-amplitude -.4vw
@@ -65,10 +61,8 @@
     --float-duration 7.5s
     --float-delay -2.3s
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
-    will-change transform
     &:hover
-        scale 1.075
-        background-image url('../../assets/special.png') !important
+        /* background-image url('../../assets/special.png') !important */
 
 
 /* .Image:nth-of-type(2)

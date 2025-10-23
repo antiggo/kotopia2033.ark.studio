@@ -7,13 +7,16 @@
         background-color black
         background-image url('../../assets/water.jpg')
         position fixed
+        top 0
+        box-shadow inset 0 0 0 .8vw #FCEF3A
     &__logo
-        width 26vw
-        height 6vw
-        background-size contain
+        top -7.9vw
+        width 100vw
+        height 22vw
+        background-size cover
         background-repeat no-repeat
         background-image url('../../assets/logo.svg')
-        position relative
+        position fixed
     &__content
         background #241B1B
         position fixed
@@ -100,10 +103,11 @@
 
 
 .App
-    /* border .7vw solid #FCEF3A */
+    cursor()
     font-family 'Times New Roman'
     font-size 1.1vw
-    line-height 1.6vw
+    line-height 1.3vw
+    letter-spacing -.09vw
     @media $screen-phone
         font-size 20px
         line-height 28px
