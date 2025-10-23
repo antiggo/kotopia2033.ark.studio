@@ -51,6 +51,10 @@
         text-align right
     &__subtitle
         color #4B4B4B
+    &__strong
+        background #fcef3a
+        color #241b1b
+        text-transform uppercase
     &__head
         position relative
         margin-bottom .5vw
@@ -66,11 +70,14 @@
         opacity 0
         visibility hidden
         pointer-events none
-    
+        transform scale(0.95) translateY(-1vw)
+        transition opacity 0.1s ease, visibility 0.3s ease, transform 0.3s ease
+
     &_active &__card
         opacity 1
         visibility visible
         pointer-events auto
+        transform scale(1) translateY(0)
     &__footer
         width 100%
         height 4.8vw

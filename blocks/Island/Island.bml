@@ -2,6 +2,34 @@
 var activeIsland = null;
 var clickOutsideInitialized = false;
 
+// Audio for card open and hover
+var cardOpenSound = new Audio('/assets/card-open.mp3');
+var cardHoverSound = new Audio('/assets/card-hover.mp3');
+var openingSound = new Audio('/assets/opening.mp3');
+
+// Preload audio
+openingSound.load();
+cardOpenSound.load();
+cardHoverSound.load();
+
+// Play opening sound on first user interaction
+var openingSoundPlayed = false;
+function playOpeningSound() {
+    if (!openingSoundPlayed) {
+        openingSoundPlayed = true;
+        openingSound.play().catch(function(error) {
+            console.log('Opening audio play failed:', error);
+        });
+        // Remove listeners after playing once
+        document.removeEventListener('click', playOpeningSound);
+        document.removeEventListener('keydown', playOpeningSound);
+        document.removeEventListener('mousemove', playOpeningSound);
+    }
+}
+document.addEventListener('click', playOpeningSound);
+document.addEventListener('keydown', playOpeningSound);
+document.addEventListener('mousemove', playOpeningSound);
+
 Beast.decl({
     Island: {
         expand: function () {
@@ -31,6 +59,14 @@ Beast.decl({
                 });
             }
             
+            // Add hover sound
+            this.domNode().addEventListener('mouseenter', function(e) {
+                cardHoverSound.currentTime = 0;
+                cardHoverSound.play().catch(function(error) {
+                    console.log('Hover audio play failed:', error);
+                });
+            });
+            
             this.domNode().addEventListener('click', function(e) {
                 // Check if click is on the card itself
                 var clickedOnCard = e.target.closest('.Island__card');
@@ -58,6 +94,11 @@ Beast.decl({
                 } else {
                     self.mod('active', true);
                     activeIsland = self;
+                    // Play sound when opening card
+                    cardOpenSound.currentTime = 0; // Reset to start
+                    cardOpenSound.play().catch(function(error) {
+                        console.log('Audio play failed:', error);
+                    });
                 }
             });
         },
