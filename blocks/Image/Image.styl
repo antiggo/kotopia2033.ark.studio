@@ -31,6 +31,17 @@
         background-image url('../../assets/growth-hover.png') !important
 
 .Image_Future
+    --float-x-amplitude .3vw
+    --float-y-amplitude 1vw
+    --float-rot-amplitude .6deg
+    --float-duration 7s
+    --float-delay -1.2s
+    animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
+    will-change transform
+    &:hover
+        background-image url('../../assets/future-hover.png') !important
+
+.Image_Not
     --float-x-amplitude 0vw
     --float-y-amplitude .7vw
     --float-rot-amplitude -.4deg
@@ -39,7 +50,7 @@
     animation floatComposite var(--float-duration) ease-in-out var(--float-delay) infinite
     will-change transform
     &:hover
-        background-image url('../../assets/future-hover.png') !important
+        background-image url('../../assets/not-kotopia.png') !important
 
 /* .Image:nth-of-type(2)
     --float-x-amplitude .4vw
