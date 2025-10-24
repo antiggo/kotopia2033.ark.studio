@@ -1,21 +1,56 @@
+// Parallax scroll handler
+var parallaxImages = [];
+var ticking = false;
+
+function updateParallax() {
+    var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    
+    parallaxImages.forEach(function(item) {
+        var speed = item.speed;
+        var offset = scrollY * speed;
+        item.element.style.setProperty('--parallax-y', offset + 'px');
+    });
+    
+    ticking = false;
+}
+
+function requestParallaxUpdate() {
+    if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+    }
+}
+
+window.addEventListener('scroll', requestParallaxUpdate, { passive: true });
+
 Beast.decl({
     Image: {
         expand: function () {
-            if (MissEvent.mobile) {
-                this.css({
-                    width: this.parentBlock().param('mobilewidth'),
-                    height: this.parentBlock().param('mobileheight'),
-                })
-            } else {
-                this.empty()
-                this.css({
-                    width: this.param('width'),
-                    height: this.param('height'),
-                })    
-            }
+            this.empty()
             this.css({
                 backgroundImage: 'url('+ this.text() +')',
+                width: this.param('width'),
+                height: this.param('height'),
             })
+            if (MissEvent.mobile) {
+                
+            } else {
+                  
+            }
+        },
+        domInit: function() {
+            var self = this;
+            var imageElements = document.querySelectorAll('.Image');
+            var index = Array.from(imageElements).indexOf(this.domNode());
+            
+            // Different parallax speeds for each image
+            var speeds = [0.05, -0.03, 0.08, -0.04, 0.06, -0.05, 0.04, -0.06];
+            var speed = speeds[index % speeds.length];
+            
+            parallaxImages.push({
+                element: this.domNode(),
+                speed: speed
+            });
         },
         
     },

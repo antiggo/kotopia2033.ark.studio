@@ -20,6 +20,7 @@
     &__hint
         color #241B1B
         background #FCEF3A
+        border 2px solid #1abef07d
         display inline-block
         margin 0 auto
         letter-spacing -.1vw
@@ -29,13 +30,16 @@
         margin-bottom 2vw
         opacity 0
         visibility hidden
-        transform translateY(0.5vw)
-        transition opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease
+        translate 0 0.5vw
+        transition opacity 0.3s ease, visibility 0.3s ease, translate 0.3s ease
+        --hint-float-y 0.3vw
+        --hint-float-duration 3s
+        animation hintFloat var(--hint-float-duration) ease-in-out infinite
     
     &:hover &__hint
         opacity 1
         visibility visible
-        transform translateY(-0.5vw)
+        translate 0 -0.5vw
     &__num
         font-size 5vw
         line-height 5vw
@@ -71,7 +75,7 @@
         visibility hidden
         pointer-events none
         transform scale(0.95) translateY(-1vw)
-        transition opacity 0.1s ease, visibility 0.3s ease, transform 0.3s ease
+        transition opacity 0.2s ease, visibility 0.3s ease, transform 0.3s ease
 
     &_active &__card
         opacity 1
@@ -96,3 +100,9 @@
     &__p
         & + &
             margin-top 1vw
+
+@keyframes hintFloat
+    0%, 100%
+        transform translateY(0)
+    50%
+        transform translateY(calc(-1 * var(--hint-float-y, 0.3vw)))
