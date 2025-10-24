@@ -4831,12 +4831,19 @@ Beast.decl({
         expand: function () {
             var num = this.parentBlock().param('num');
             var formattedNum = String(num).padStart(2, '0');
+            
+            // Generate random block ID: block:XXXX/XXX.XX
+            var blockId = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+            var blockNum1 = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            var blockNum2 = Math.floor(Math.random() * 100).toString().padStart(2, '0');
+            var randomBlockId = 'block:' + blockId + '/' + blockNum1 + '.' + blockNum2;
+            
             this.css({
                 left: this.param('left'),
                 top: this.param('top'),
             })  
             this.append(
-                Beast.node("head",{__context:this},"\n                    ",Beast.node("num",undefined,formattedNum),"\n                    ",Beast.node("side",undefined,"\n                        ",this.get('title'),"\n                        ",Beast.node("subtitle",undefined,"block:0936/179.99"),"\n                    "),"\n                "),
+                Beast.node("head",{__context:this},"\n                    ",Beast.node("num",undefined,formattedNum),"\n                    ",Beast.node("side",undefined,"\n                        ",this.get('title'),"\n                        ",Beast.node("subtitle",undefined,randomBlockId),"\n                    "),"\n                "),
                 Beast.node("line",{__context:this,"":true}),
                 Beast.node("line",{__context:this,"":true}),
                 Beast.node("line",{__context:this,"":true}),

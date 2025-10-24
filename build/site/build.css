@@ -2849,6 +2849,7 @@
   font-size: 5vw;
   line-height: 5vw;
   letter-spacing: -0.5vw;
+  margin-left: -0.4vw;
 }
 .Island__side {
   position: absolute;
@@ -2876,7 +2877,7 @@
   text-align: left;
   position: absolute;
   top: 0;
-  width: 34vw;
+  width: 31.1vw;
   background: #241b1b;
   color: #fcef3a;
   border-radius: 1vw;
@@ -2930,6 +2931,45 @@
 .Link_type_white:hover {
   text-decoration: none;
   color: #fff;
+}
+/* CUT THE FILE HERE */
+.Menu {
+  position: fixed;
+  right: 0;
+  width: 10vw;
+  top: 0;
+  bottom: 0;
+  font-size: 1vw;
+  height: 100vh;
+  z-index: 4000;
+  font-family: Helvetica, Arial;
+  box-sizing: border-box;
+  padding: 2vw 0 0 1.6vw;
+}
+@media screen and (max-width: 767px) {
+  .Menu {
+    display: none;
+  }
+}
+.Menu_overcharcoal {
+  color: #fff;
+}
+.Menu__text {
+  display: inline-block;
+}
+.Menu__item {
+  display: block;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+.Menu__item_overcharcoal {
+  color: #fff;
+}
+.Menu__item_State_Active .Button {
+  background: #000;
+}
+.Menu__item + .Menu__item {
+  margin-top: 1vw;
 }
 /* CUT THE FILE HERE */
 .Offer {
@@ -3661,45 +3701,6 @@
 }
 .uistacknavigation_pushed .uistacknavigation__fog {
   display: block;
-}
-/* CUT THE FILE HERE */
-.Menu {
-  position: fixed;
-  right: 0;
-  width: 10vw;
-  top: 0;
-  bottom: 0;
-  font-size: 1vw;
-  height: 100vh;
-  z-index: 4000;
-  font-family: Helvetica, Arial;
-  box-sizing: border-box;
-  padding: 2vw 0 0 1.6vw;
-}
-@media screen and (max-width: 767px) {
-  .Menu {
-    display: none;
-  }
-}
-.Menu_overcharcoal {
-  color: #fff;
-}
-.Menu__text {
-  display: inline-block;
-}
-.Menu__item {
-  display: block;
-  color: inherit;
-  transition: color 0.3s ease;
-}
-.Menu__item_overcharcoal {
-  color: #fff;
-}
-.Menu__item_State_Active .Button {
-  background: #000;
-}
-.Menu__item + .Menu__item {
-  margin-top: 1vw;
 }
 @keyframes floatComposite {
   0%, 100% {
