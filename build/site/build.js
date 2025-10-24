@@ -4241,9 +4241,20 @@ Beast.decl({
             )
         },
         domInit: function fn() {
-
+            var footer = document.querySelector('.Footer');
             
-
+            window.addEventListener('scroll', function() {
+                var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Handle footer visibility
+                if (footer) {
+                    if (scrollY > 50) {
+                        footer.classList.add('Footer_hidden');
+                    } else {
+                        footer.classList.remove('Footer_hidden');
+                    }
+                }
+            }, { passive: true });
         }
     },
     
@@ -4251,169 +4262,6 @@ Beast.decl({
 
 
 
-const emailJsService = "gmail";
-const coachingTemplate = "coaching";
-
-Beast.decl({
-    Form: {
-
-        expand: function () {
-
-            this.append(
-                Beast.node("form",{__context:this},"\n                    ",this.get('title', 'item'),"\n                ")
-                
-            )
-
-        },
-
-        domInit: function () {
-            var self = this
-
-            let requestForm = document.querySelector(".form__action");
-
-            requestForm.onclick = function(event) {
-              
-              event.preventDefault();
-              // if all validation goes well
-              if (validateForm() && !this.disabled) {
-                this.value = 'Отправляю...';
-                this.disabled = true;
-                this.classList.add("button-loading");
-                sendEmail();
-                
-              } else return false;
-            }
-
-            // function sendRquestEmail(name, email, phone) {
-
-            //   emailjs.send(emailJsService, emailJsTemplate, {
-            //     name: name,
-            //     email: email,
-            //   })
-            //   .then(function() {
-
-            //       //only in successful case send email to client
-
-            //       sendEmailClient();
-                  
-            //   }, function(error) {
-            //       console.log('Failed sendig email', error);
-            //   });
-            // }
-
-            //send email to client
-            function sendEmail() {
-                
-                let btnSend = document.querySelector(".form__action-title");
-                btnSend.innerHTML = 'Message sent';
-                btnSend.parentNode.className = "form__action form__disabled";
-
-                $(".form__action").attr("disabled", "disabled").off('click');
-
-                emailjs.send(emailJsService, coachingTemplate, {
-                  name: document.querySelector("#name").value,
-                  email: document.querySelector("#email").value,
-                  message: document.querySelector("#message").value
-                })
-                .then(function() {
-                    console.log('sent?');
-                }, function(error) {
-                    console.log('Failed sendig email', error);
-                });
-            }
-
-            //validation of all input fields
-            function validateForm() {
-              
-              let nameField = document.querySelector("#name");
-              if (nameField.value.trim() == "") {
-                alert('Please enter your name');
-                return false;
-              }
-
-              let emailField = document.querySelector("#email");
-              if (emailField.value.trim() == "") {
-                alert('Please enter your email, so we can get back to you');
-                return false;
-              }
-
-              return true;
-            }
-        }
-    },
-
-    Form__form: {
-        tag: 'div',
-        expand: function () {
-
-            this.domAttr('action', this.parentBlock().param('action'))
-            this.domAttr('id', this.parentBlock().param('id'))
-
-        }
-    },
-
-    Form__action: {
-        inherits: 'Typo',
-        mod: {
-            Major: true,
-            Text: 'M',
-            Line: 'L'
-        }, 
-        expand: function () {
-            // this.domAttr('type', 'submit')
-            // this.domAttr('value', this.text())
-            this.append(
-              Beast.node("action-title",{__context:this},this.text()),
-            )
-        }
-    },
-
-    Form__input: {
-        inherits: 'Typo',
-        mod: {
-            Text: 'M',
-            Line: 'L'
-        }, 
-        tag: 'input',
-        expand: function () {
-            this.domAttr('type', this.param('type'))
-            this.domAttr('id', this.param('id'))
-            this.domAttr('placeholder', this.param('placeholder'))
-            this.domAttr('required', true)
-        }
-    },
-
-    Form__textarea: {
-        inherits: 'Typo',
-        mod: {
-            Text: 'M',
-            Line: 'L'
-        }, 
-        tag: 'textarea',
-        expand: function () {
-            this.domAttr('type', this.param('type'))
-            this.domAttr('id', this.param('id'))
-            this.domAttr('placeholder', this.param('placeholder'))
-            this.domAttr('required', true)
-            this.domAttr('rows', this.param('rows'))
-            this.domAttr('cols', this.param('cols'))
-        }
-    },
-
-    Form__title: {
-        inherits: 'Typo',
-        mod: {
-            Major: true,
-            Text: 'L',
-            Line: 'L'
-        }, 
-        
-    },
-
-    
-    
-    
-})
 /**
  * @block Grid Динамическая сетка
  * @tag base
@@ -4558,6 +4406,18 @@ function requestParallaxUpdate() {
 
 window.addEventListener('scroll', requestParallaxUpdate, { passive: true });
 
+// Add water to parallax on load
+window.addEventListener('DOMContentLoaded', function() {
+    var water = document.querySelector('.Map__water');
+    if (water) {
+        water.style.setProperty('--parallax-y', '0px');
+        parallaxImages.push({
+            element: water,
+            speed: 0.007 // Very subtle parallax for background
+        });
+    }
+});
+
 Beast.decl({
     Image: {
         expand: function () {
@@ -4581,6 +4441,25 @@ Beast.decl({
             // Different parallax speeds for each image
             var speeds = [0.05, -0.03, 0.08, -0.04, 0.06, -0.05, 0.04, -0.06];
             var speed = speeds[index % speeds.length];
+            
+            // Different float parameters for each image
+            var floatConfigs = [
+                { x: 0, y: 0.8, rot: 0.5, duration: 6, delay: -0.7 },
+                { x: 0.4, y: 0.5, rot: 0.6, duration: 7.5, delay: -1.1 },
+                { x: 0, y: 1, rot: -0.4, duration: 5.5, delay: -0.9 },
+                { x: -0.5, y: 0.7, rot: 0.8, duration: 8, delay: -1.5 },
+                { x: 0.2, y: 0.9, rot: 1, duration: 6.8, delay: -0.3 },
+                { x: -0.3, y: 0.4, rot: -0.9, duration: 7.2, delay: -2 },
+                { x: 0.3, y: 0.6, rot: 0.3, duration: 6.3, delay: -1.8 },
+                { x: -0.2, y: 0.85, rot: -0.5, duration: 7.8, delay: -0.5 }
+            ];
+            var config = floatConfigs[index % floatConfigs.length];
+            
+            this.domNode().style.setProperty('--float-x-amplitude', config.x + 'vw');
+            this.domNode().style.setProperty('--float-y-amplitude', config.y + 'vw');
+            this.domNode().style.setProperty('--float-rot-amplitude', config.rot + 'deg');
+            this.domNode().style.setProperty('--float-duration', config.duration + 's');
+            this.domNode().style.setProperty('--float-delay', config.delay + 's');
             
             parallaxImages.push({
                 element: this.domNode(),
@@ -4728,30 +4607,10 @@ var clickOutsideInitialized = false;
 // Audio for card open and hover
 var cardOpenSound = new Audio('/assets/card-open.mp3');
 var cardHoverSound = new Audio('/assets/card-hover.mp3');
-var openingSound = new Audio('/assets/opening.mp3');
 
 // Preload audio
-openingSound.load();
 cardOpenSound.load();
 cardHoverSound.load();
-
-// Play opening sound on first user interaction
-var openingSoundPlayed = false;
-function playOpeningSound() {
-    if (!openingSoundPlayed) {
-        openingSoundPlayed = true;
-        openingSound.play().catch(function(error) {
-            console.log('Opening audio play failed:', error);
-        });
-        // Remove listeners after playing once
-        document.removeEventListener('click', playOpeningSound);
-        document.removeEventListener('keydown', playOpeningSound);
-        document.removeEventListener('mousemove', playOpeningSound);
-    }
-}
-document.addEventListener('click', playOpeningSound);
-document.addEventListener('keydown', playOpeningSound);
-document.addEventListener('mousemove', playOpeningSound);
 
 Beast.decl({
     Island: {
@@ -4836,18 +4695,14 @@ Beast.decl({
             var blockId = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
             var blockNum1 = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
             var blockNum2 = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-            var randomBlockId = 'block:' + blockId + '/' + blockNum1 + '.' + blockNum2;
             
             this.css({
                 left: this.param('left'),
                 top: this.param('top'),
             })  
             this.append(
-                Beast.node("head",{__context:this},"\n                    ",Beast.node("num",undefined,formattedNum),"\n                    ",Beast.node("side",undefined,"\n                        ",this.get('title'),"\n                        ",Beast.node("subtitle",undefined,randomBlockId),"\n                    "),"\n                "),
-                Beast.node("line",{__context:this,"":true}),
-                Beast.node("line",{__context:this,"":true}),
-                Beast.node("line",{__context:this,"":true}),
-                Beast.node("line",{__context:this,"":true}),
+                Beast.node("head",{__context:this},"\n                    ",Beast.node("num",undefined,formattedNum),"\n                    ",Beast.node("side",undefined,"\n                        ",this.get('title'),"\n                        ",Beast.node("subtitle",undefined,"\n                            ",'block',Beast.node("colon",undefined,':'),blockId + '/' + blockNum1 + '.' + blockNum2,"\n                        "),"\n                    "),"\n                "),
+                Beast.node("lines",{__context:this},"\n                ",Beast.node("line",{"":true}),"\n                ",Beast.node("line",{"":true}),"\n                ",Beast.node("line",{"":true}),"\n                ",Beast.node("line",{"":true}),"\n                "),
                 this.get('text'),
                 Beast.node("footer",{__context:this,"":true})
             )
@@ -4888,6 +4743,31 @@ Beast
         }
     }
 })
+Beast.decl({
+    Menu: {
+        domInit: function () {
+            
+        },
+
+        expand: function () {
+            this.append(
+                this.get('item')
+            )
+        },
+            
+    },
+    'Menu__item': {
+        expand: function () {
+            this.append(
+                Beast.node("text",{__context:this},this.get())
+            )
+        },
+
+    },
+     
+})
+
+
 Beast.decl({
     Offer: {
         inherits: 'Typo',
@@ -5256,104 +5136,6 @@ Beast.decl({
 })
 
 Beast.decl({
-    Menu: {
-        domInit: function () {
-            
-        },
-
-        expand: function () {
-            this.append(
-                this.get('item')
-            )
-        },
-            
-    },
-    'Menu__item': {
-        expand: function () {
-            this.append(
-                Beast.node("text",{__context:this},this.get())
-            )
-        },
-
-    },
-     
-})
-
-
-Beast.decl({
-    Paper: {
-        expand: function () {
-            this.append(
-                Beast.node("dot",{__context:this,"Top":true}),
-                Beast.node("dot",{__context:this,"MiddleTop":true}),
-                Beast.node("dot",{__context:this,"MiddleBottom":true}),
-                Beast.node("dot",{__context:this,"Bottom":true}),
-                Beast.node("content",{__context:this},"\n                    ",this.get('title', 'text', 'author', 'date'),"\n                "),
-                Beast.node("signature",{__context:this,"":true})
-            )
-        }
-    },
-    
-})
-
-Beast.decl({
-    Parallax: {
-        expand: function () {
-            this.append()
-            this.css({
-                width: this.param('width'),
-                height: this.param('height')
-            })  
-        }
-    },
-    Parallax__image: {
-        expand: function () {
-            this.empty()
-            this.css({
-                backgroundImage: 'url('+ this.text('') +')',
-                width: this.parentBlock().param('width'),
-                height: this.parentBlock().param('height'),
-                backgroundSize: this.parentBlock().param('width')
-            })
-        },
-        domInit: function fn() {
-            const parallaxImage = this.domNode();
-            if (!parallaxImage) return;
-            
-            // Get speed parameter, default to 50 if not specified
-            const defaultSpeed = this.param('speed') || 50;
-            
-            function updateParallax() {
-                const rect = parallaxImage.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-                const elementTop = rect.top;
-                const elementHeight = rect.height;
-                const elementCenter = elementTop + elementHeight / 2;
-                const viewportCenter = windowHeight / 2;
-                
-                // Calculate distance from viewport center (-1 to 1)
-                const distance = (viewportCenter - elementCenter) / (windowHeight / 2);
-                
-                // Check if we're on mobile (screen width <= 767px)
-                const isMobile = window.innerWidth <= 767;
-                // Use original speed for desktop, reduced speed for mobile
-                const speed = isMobile ? defaultSpeed * 0.2 : defaultSpeed;
-                
-                // Apply reversed parallax transform - negative to scroll up when scrolling down
-                const parallaxOffset = -distance * speed;
-                parallaxImage.style.transform = `translateY(${parallaxOffset}px)`;
-            }
-            
-            // Add scroll event listener
-            window.addEventListener('scroll', updateParallax);
-            
-            // Initial call
-            updateParallax();
-        }
-    }
-})
-
-Beast.decl({
     Section: {
 
         expand: function () {
@@ -5669,6 +5451,242 @@ Beast.decl({
             }
 
             this.append(this.get('/'))
+        }
+    }
+})
+
+Beast.decl({
+    Paper: {
+        expand: function () {
+            this.append(
+                Beast.node("dot",{__context:this,"Top":true}),
+                Beast.node("dot",{__context:this,"MiddleTop":true}),
+                Beast.node("dot",{__context:this,"MiddleBottom":true}),
+                Beast.node("dot",{__context:this,"Bottom":true}),
+                Beast.node("content",{__context:this},"\n                    ",this.get('title', 'text', 'author', 'date'),"\n                "),
+                Beast.node("signature",{__context:this,"":true})
+            )
+        }
+    },
+    
+})
+
+const emailJsService = "gmail";
+const coachingTemplate = "coaching";
+
+Beast.decl({
+    Form: {
+
+        expand: function () {
+
+            this.append(
+                Beast.node("form",{__context:this},"\n                    ",this.get('title', 'item'),"\n                ")
+                
+            )
+
+        },
+
+        domInit: function () {
+            var self = this
+
+            let requestForm = document.querySelector(".form__action");
+
+            requestForm.onclick = function(event) {
+              
+              event.preventDefault();
+              // if all validation goes well
+              if (validateForm() && !this.disabled) {
+                this.value = 'Отправляю...';
+                this.disabled = true;
+                this.classList.add("button-loading");
+                sendEmail();
+                
+              } else return false;
+            }
+
+            // function sendRquestEmail(name, email, phone) {
+
+            //   emailjs.send(emailJsService, emailJsTemplate, {
+            //     name: name,
+            //     email: email,
+            //   })
+            //   .then(function() {
+
+            //       //only in successful case send email to client
+
+            //       sendEmailClient();
+                  
+            //   }, function(error) {
+            //       console.log('Failed sendig email', error);
+            //   });
+            // }
+
+            //send email to client
+            function sendEmail() {
+                
+                let btnSend = document.querySelector(".form__action-title");
+                btnSend.innerHTML = 'Message sent';
+                btnSend.parentNode.className = "form__action form__disabled";
+
+                $(".form__action").attr("disabled", "disabled").off('click');
+
+                emailjs.send(emailJsService, coachingTemplate, {
+                  name: document.querySelector("#name").value,
+                  email: document.querySelector("#email").value,
+                  message: document.querySelector("#message").value
+                })
+                .then(function() {
+                    console.log('sent?');
+                }, function(error) {
+                    console.log('Failed sendig email', error);
+                });
+            }
+
+            //validation of all input fields
+            function validateForm() {
+              
+              let nameField = document.querySelector("#name");
+              if (nameField.value.trim() == "") {
+                alert('Please enter your name');
+                return false;
+              }
+
+              let emailField = document.querySelector("#email");
+              if (emailField.value.trim() == "") {
+                alert('Please enter your email, so we can get back to you');
+                return false;
+              }
+
+              return true;
+            }
+        }
+    },
+
+    Form__form: {
+        tag: 'div',
+        expand: function () {
+
+            this.domAttr('action', this.parentBlock().param('action'))
+            this.domAttr('id', this.parentBlock().param('id'))
+
+        }
+    },
+
+    Form__action: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Text: 'M',
+            Line: 'L'
+        }, 
+        expand: function () {
+            // this.domAttr('type', 'submit')
+            // this.domAttr('value', this.text())
+            this.append(
+              Beast.node("action-title",{__context:this},this.text()),
+            )
+        }
+    },
+
+    Form__input: {
+        inherits: 'Typo',
+        mod: {
+            Text: 'M',
+            Line: 'L'
+        }, 
+        tag: 'input',
+        expand: function () {
+            this.domAttr('type', this.param('type'))
+            this.domAttr('id', this.param('id'))
+            this.domAttr('placeholder', this.param('placeholder'))
+            this.domAttr('required', true)
+        }
+    },
+
+    Form__textarea: {
+        inherits: 'Typo',
+        mod: {
+            Text: 'M',
+            Line: 'L'
+        }, 
+        tag: 'textarea',
+        expand: function () {
+            this.domAttr('type', this.param('type'))
+            this.domAttr('id', this.param('id'))
+            this.domAttr('placeholder', this.param('placeholder'))
+            this.domAttr('required', true)
+            this.domAttr('rows', this.param('rows'))
+            this.domAttr('cols', this.param('cols'))
+        }
+    },
+
+    Form__title: {
+        inherits: 'Typo',
+        mod: {
+            Major: true,
+            Text: 'L',
+            Line: 'L'
+        }, 
+        
+    },
+
+    
+    
+    
+})
+Beast.decl({
+    Parallax: {
+        expand: function () {
+            this.append()
+            this.css({
+                width: this.param('width'),
+                height: this.param('height')
+            })  
+        }
+    },
+    Parallax__image: {
+        expand: function () {
+            this.empty()
+            this.css({
+                backgroundImage: 'url('+ this.text('') +')',
+                width: this.parentBlock().param('width'),
+                height: this.parentBlock().param('height'),
+                backgroundSize: this.parentBlock().param('width')
+            })
+        },
+        domInit: function fn() {
+            const parallaxImage = this.domNode();
+            if (!parallaxImage) return;
+            
+            // Get speed parameter, default to 50 if not specified
+            const defaultSpeed = this.param('speed') || 50;
+            
+            function updateParallax() {
+                const rect = parallaxImage.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const elementTop = rect.top;
+                const elementHeight = rect.height;
+                const elementCenter = elementTop + elementHeight / 2;
+                const viewportCenter = windowHeight / 2;
+                
+                // Calculate distance from viewport center (-1 to 1)
+                const distance = (viewportCenter - elementCenter) / (windowHeight / 2);
+                
+                // Check if we're on mobile (screen width <= 767px)
+                const isMobile = window.innerWidth <= 767;
+                // Use original speed for desktop, reduced speed for mobile
+                const speed = isMobile ? defaultSpeed * 0.2 : defaultSpeed;
+                
+                // Apply reversed parallax transform - negative to scroll up when scrolling down
+                const parallaxOffset = -distance * speed;
+                parallaxImage.style.transform = `translateY(${parallaxOffset}px)`;
+            }
+            
+            // Add scroll event listener
+            window.addEventListener('scroll', updateParallax);
+            
+            // Initial call
+            updateParallax();
         }
     }
 })

@@ -19,9 +19,20 @@ Beast.decl({
             )
         },
         domInit: function fn() {
-
+            var footer = document.querySelector('.Footer');
             
-
+            window.addEventListener('scroll', function() {
+                var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Handle footer visibility
+                if (footer) {
+                    if (scrollY > 50) {
+                        footer.classList.add('Footer_hidden');
+                    } else {
+                        footer.classList.remove('Footer_hidden');
+                    }
+                }
+            }, { passive: true });
         }
     },
     

@@ -18,6 +18,8 @@
             &:hover 
                 scale 1.2
     &__hint
+        position relative
+        z-index 1000
         color #241B1B
         background #FCEF3A
         border 2px solid #1abef07d
@@ -27,7 +29,7 @@
         border-radius 10vw
         text-transform uppercase
         padding .2vw .6vw
-        margin-bottom 2vw
+        margin-bottom -1.5vw
         opacity 0
         visibility hidden
         translate 0 0.5vw
@@ -40,6 +42,10 @@
         opacity 1
         visibility visible
         translate 0 -0.5vw
+    
+    &_active &__hint
+        opacity 0 !important
+        visibility hidden !important
     &__num
         font-size 5vw
         line-height 5vw
@@ -56,6 +62,10 @@
         text-align right
     &__subtitle
         color #4B4B4B
+    
+    &__colon
+        display inline
+        animation colonBlink 1s step-end infinite
     &__strong
         background #fcef3a
         color #241b1b
@@ -89,9 +99,12 @@
         background-size contain
         background-repeat no-repeat
         background-image url('../../assets/card-footer.svg')
+    &__lines
+        width 31.1vw
+        overflow hidden
     &__line
         
-        width 100%
+        width 205%
         height .2vw
         background-size contain
         background-repeat no-repeat
@@ -107,3 +120,9 @@
         transform translateY(0)
     50%
         transform translateY(calc(-1 * var(--hint-float-y, 0.3vw)))
+
+@keyframes colonBlink
+    0%, 49%
+        opacity 1
+    50%, 100%
+        opacity 0

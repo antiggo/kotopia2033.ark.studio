@@ -120,6 +120,12 @@
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url("../../assets/map-footer-text.svg");
+  transform: translateY(0);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.Footer_hidden {
+  transform: translateY(100%);
+  opacity: 0;
 }
 .Map {
   padding-bottom: 15vw;
@@ -132,9 +138,9 @@
   background-color: #000;
   background-image: url("../../assets/water.jpg");
   position: fixed;
-}
-.Map__water top 0 {
-  box-shadow: inset 0 0 0 0.8vw #fcef3a;
+  top: 0;
+  --parallax-y: 0px;
+  transform: translateY(var(--parallax-y));
 }
 .Map__logo {
   top: -7.9vw;
@@ -2587,62 +2593,6 @@
 .Image {
   animation: floatComposite var(--float-duration, 6s) ease-in-out var(--float-delay, 0s) infinite;
 }
-.Image:nth-of-type(1) {
-  --float-x-amplitude: 0vw;
-  --float-y-amplitude: 0.8vw;
-  --float-rot-amplitude: 0.5deg;
-  --float-duration: 6s;
-  --float-delay: -0.7s;
-}
-.Image:nth-of-type(2) {
-  --float-x-amplitude: 0.4vw;
-  --float-y-amplitude: 0.5vw;
-  --float-rot-amplitude: 0.6deg;
-  --float-duration: 7.5s;
-  --float-delay: -1.1s;
-}
-.Image:nth-of-type(3) {
-  --float-x-amplitude: 0vw;
-  --float-y-amplitude: 1vw;
-  --float-rot-amplitude: -0.4deg;
-  --float-duration: 5.5s;
-  --float-delay: -0.9s;
-}
-.Image:nth-of-type(4) {
-  --float-x-amplitude: -0.5vw;
-  --float-y-amplitude: 0.7vw;
-  --float-rot-amplitude: 0.8deg;
-  --float-duration: 8s;
-  --float-delay: -1.5s;
-}
-.Image:nth-of-type(5) {
-  --float-x-amplitude: 0.2vw;
-  --float-y-amplitude: 0.9vw;
-  --float-rot-amplitude: 1deg;
-  --float-duration: 6.8s;
-  --float-delay: -0.3s;
-}
-.Image:nth-of-type(6) {
-  --float-x-amplitude: -0.3vw;
-  --float-y-amplitude: 0.4vw;
-  --float-rot-amplitude: -0.9deg;
-  --float-duration: 7.2s;
-  --float-delay: -2s;
-}
-.Image:nth-of-type(7) {
-  --float-x-amplitude: 0.3vw;
-  --float-y-amplitude: 0.6vw;
-  --float-rot-amplitude: 0.3deg;
-  --float-duration: 6.3s;
-  --float-delay: -1.8s;
-}
-.Image:nth-of-type(8) {
-  --float-x-amplitude: -0.2vw;
-  --float-y-amplitude: 0.85vw;
-  --float-rot-amplitude: -0.5deg;
-  --float-duration: 7.8s;
-  --float-delay: -0.5s;
-}
 /* CUT THE FILE HERE */
 .Intro {
   position: relative;
@@ -2835,6 +2785,8 @@
   scale: 1.2;
 }
 .Island__hint {
+  position: relative;
+  z-index: 1000;
   color: #241b1b;
   background: #fcef3a;
   border: 2px solid rgba(26,190,240,0.49);
@@ -2844,7 +2796,7 @@
   border-radius: 10vw;
   text-transform: uppercase;
   padding: 0.2vw 0.6vw;
-  margin-bottom: 2vw;
+  margin-bottom: -1.5vw;
   opacity: 0;
   visibility: hidden;
   translate: 0 0.5vw;
@@ -2857,6 +2809,10 @@
   opacity: 1;
   visibility: visible;
   translate: 0 -0.5vw;
+}
+.Island_active .Island__hint {
+  opacity: 0 !important;
+  visibility: hidden !important;
 }
 .Island__num {
   font-size: 5vw;
@@ -2876,6 +2832,10 @@
 }
 .Island__subtitle {
   color: #4b4b4b;
+}
+.Island__colon {
+  display: inline;
+  animation: colonBlink 1s step-end infinite;
 }
 .Island__strong {
   background: #fcef3a;
@@ -2914,12 +2874,16 @@
   background-repeat: no-repeat;
   background-image: url("../../assets/card-footer.svg");
 }
+.Island__lines {
+  width: 31.1vw;
+  overflow: hidden;
+}
 .Island__line {
-  width: 100%;
+  width: 205%;
   height: 0.2vw;
   background-size: contain;
   background-repeat: no-repeat;
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzk2IiBoZWlnaHQ9IjEiIHZpZXdCb3g9IjAgMCAzOTYgMSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTAgMC41SDM5NiIgc3Ryb2tlPSIjNEI0QjRCIiBzdHJva2UtZGFzaGFycmF5PSIxIDEiLz4KPC9zdmc+Cg==");
+  background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwNCIgaGVpZ2h0PSIxIiB2aWV3Qm94PSIwIDAgMTAwNCAxIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMCAwLjVINjk2IiBzdHJva2U9IiM0QjRCNEIiIHN0cm9rZS1kYXNoYXJyYXk9IjEgMSIvPgo8L3N2Zz4K");
 }
 .Island__text {
   padding: 1vw 0 2vw 0;
@@ -3731,5 +3695,13 @@
   }
   50% {
     transform: translateY(calc(-1 * var(--hint-float-y, 0.3vw)));
+  }
+}
+@keyframes colonBlink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
   }
 }

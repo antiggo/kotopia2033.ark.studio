@@ -5,30 +5,10 @@ var clickOutsideInitialized = false;
 // Audio for card open and hover
 var cardOpenSound = new Audio('/assets/card-open.mp3');
 var cardHoverSound = new Audio('/assets/card-hover.mp3');
-var openingSound = new Audio('/assets/opening.mp3');
 
 // Preload audio
-openingSound.load();
 cardOpenSound.load();
 cardHoverSound.load();
-
-// Play opening sound on first user interaction
-var openingSoundPlayed = false;
-function playOpeningSound() {
-    if (!openingSoundPlayed) {
-        openingSoundPlayed = true;
-        openingSound.play().catch(function(error) {
-            console.log('Opening audio play failed:', error);
-        });
-        // Remove listeners after playing once
-        document.removeEventListener('click', playOpeningSound);
-        document.removeEventListener('keydown', playOpeningSound);
-        document.removeEventListener('mousemove', playOpeningSound);
-    }
-}
-document.addEventListener('click', playOpeningSound);
-document.addEventListener('keydown', playOpeningSound);
-document.addEventListener('mousemove', playOpeningSound);
 
 Beast.decl({
     Island: {
@@ -113,7 +93,6 @@ Beast.decl({
             var blockId = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
             var blockNum1 = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
             var blockNum2 = Math.floor(Math.random() * 100).toString().padStart(2, '0');
-            var randomBlockId = 'block:' + blockId + '/' + blockNum1 + '.' + blockNum2;
             
             this.css({
                 left: this.param('left'),
@@ -124,13 +103,17 @@ Beast.decl({
                     <num>{formattedNum}</num>
                     <side>
                         {this.get('title')}
-                        <subtitle>{randomBlockId}</subtitle>
+                        <subtitle>
+                            {'block'}<colon>{':'}</colon>{blockId + '/' + blockNum1 + '.' + blockNum2}
+                        </subtitle>
                     </side>
                 </head>,
-                <line />,
-                <line />,
-                <line />,
-                <line />,
+                <lines>
+                <line />
+                <line />
+                <line />
+                <line />
+                </lines>,
                 this.get('text'),
                 <footer />
             )
