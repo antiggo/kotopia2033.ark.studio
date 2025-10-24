@@ -4220,48 +4220,6 @@ BemNode.prototype = {
 }
 
 })();
-Beast.decl({
-    App: {
-        inherits: ['Grid', 'UIStackNavigation'],
-        tag:'body',
-        mod: {
-            platform: '',
-            device: ''
-        },
-        expand: function fn () {
-
-            if (MissEvent.mobile) {
-                this.mix('mobile')
-                console.log('mobile')
-            }
-
-            this.inherited(fn)
-            this.append(
-                this.get()
-            )
-        },
-        domInit: function fn() {
-            var footer = document.querySelector('.Footer');
-            
-            window.addEventListener('scroll', function() {
-                var scrollY = window.pageYOffset || document.documentElement.scrollTop;
-                
-                // Handle footer visibility
-                if (footer) {
-                    if (scrollY > 50) {
-                        footer.classList.add('Footer_hidden');
-                    } else {
-                        footer.classList.remove('Footer_hidden');
-                    }
-                }
-            }, { passive: true });
-        }
-    },
-    
-})
-
-
-
 const emailJsService = "gmail";
 const coachingTemplate = "coaching";
 
@@ -4844,6 +4802,24 @@ Beast.decl({
                     cardOpenSound.play().catch(function(error) {
                         console.log('Audio play failed:', error);
                     });
+                    
+                    // Scroll to make card visible if needed
+                    setTimeout(function() {
+                        var card = self.domNode().querySelector('.Island__card');
+                        if (card) {
+                            var cardRect = card.getBoundingClientRect();
+                            var windowHeight = window.innerHeight;
+                            
+                            // Check if card extends below viewport
+                            if (cardRect.bottom > windowHeight) {
+                                var scrollAmount = cardRect.bottom - windowHeight + 50; // 50px padding
+                                window.scrollBy({
+                                    top: scrollAmount,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }
+                    }, 100); // Wait for card to render
                 }
             });
         },
@@ -4865,8 +4841,8 @@ Beast.decl({
             })  
             this.append(
                 Beast.node("head",{__context:this},"\n                    ",Beast.node("num",undefined,formattedNum),"\n                    ",Beast.node("side",undefined,"\n                        ",this.get('title'),"\n                        ",Beast.node("subtitle",undefined,"\n                            ",'block',Beast.node("colon",undefined,':'),blockId + '/' + blockNum1 + '.' + blockNum2,"\n                        "),"\n                    "),"\n                "),
-                Beast.node("lines",{__context:this},"\n                ",Beast.node("line",{"":true}),"\n                ",Beast.node("line",{"":true}),"\n                ",Beast.node("line",{"":true}),"\n                ",Beast.node("line",{"":true}),"\n                "),
-                this.get('text'),
+                Beast.node("lines",{__context:this},"\n                    ",Beast.node("line",{"":true}),"\n                "),
+                this.get('text', 'Image'),
                 Beast.node("footer",{__context:this,"":true})
             )
         },
@@ -5690,3 +5666,45 @@ Beast.decl({
         }
     }
 })
+
+Beast.decl({
+    App: {
+        inherits: ['Grid', 'UIStackNavigation'],
+        tag:'body',
+        mod: {
+            platform: '',
+            device: ''
+        },
+        expand: function fn () {
+
+            if (MissEvent.mobile) {
+                this.mix('mobile')
+                console.log('mobile')
+            }
+
+            this.inherited(fn)
+            this.append(
+                this.get()
+            )
+        },
+        domInit: function fn() {
+            var footer = document.querySelector('.Footer');
+            
+            window.addEventListener('scroll', function() {
+                var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Handle footer visibility
+                if (footer) {
+                    if (scrollY > 50) {
+                        footer.classList.add('Footer_hidden');
+                    } else {
+                        footer.classList.remove('Footer_hidden');
+                    }
+                }
+            }, { passive: true });
+        }
+    },
+    
+})
+
+

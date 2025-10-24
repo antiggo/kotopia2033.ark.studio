@@ -79,6 +79,24 @@ Beast.decl({
                     cardOpenSound.play().catch(function(error) {
                         console.log('Audio play failed:', error);
                     });
+                    
+                    // Scroll to make card visible if needed
+                    setTimeout(function() {
+                        var card = self.domNode().querySelector('.Island__card');
+                        if (card) {
+                            var cardRect = card.getBoundingClientRect();
+                            var windowHeight = window.innerHeight;
+                            
+                            // Check if card extends below viewport
+                            if (cardRect.bottom > windowHeight) {
+                                var scrollAmount = cardRect.bottom - windowHeight + 50; // 50px padding
+                                window.scrollBy({
+                                    top: scrollAmount,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        }
+                    }, 100); // Wait for card to render
                 }
             });
         },
@@ -109,12 +127,9 @@ Beast.decl({
                     </side>
                 </head>,
                 <lines>
-                <line />
-                <line />
-                <line />
-                <line />
+                    <line />
                 </lines>,
-                this.get('text'),
+                this.get('text', 'Image'),
                 <footer />
             )
         },
