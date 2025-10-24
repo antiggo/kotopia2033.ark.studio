@@ -4889,31 +4889,6 @@ Beast
     }
 })
 Beast.decl({
-    Menu: {
-        domInit: function () {
-            
-        },
-
-        expand: function () {
-            this.append(
-                this.get('item')
-            )
-        },
-            
-    },
-    'Menu__item': {
-        expand: function () {
-            this.append(
-                Beast.node("text",{__context:this},this.get())
-            )
-        },
-
-    },
-     
-})
-
-
-Beast.decl({
     Offer: {
         inherits: 'Typo',
         expand: function () {
@@ -5279,6 +5254,31 @@ Beast.decl({
 
     
 })
+
+Beast.decl({
+    Menu: {
+        domInit: function () {
+            
+        },
+
+        expand: function () {
+            this.append(
+                this.get('item')
+            )
+        },
+            
+    },
+    'Menu__item': {
+        expand: function () {
+            this.append(
+                Beast.node("text",{__context:this},this.get())
+            )
+        },
+
+    },
+     
+})
+
 
 Beast.decl({
     Paper: {
