@@ -29,6 +29,19 @@
     background-repeat no-repeat
     background-image url('../../assets/ark.svg')
 
+.Footer
+    position fixed
+    bottom 0
+    right 0
+    left 0
+    z-index 100
+    width 26vw
+    height 3vw
+    margin 0 auto
+    background-size contain
+    background-repeat no-repeat
+    background-image url('../../assets/map-footer-text.svg')
+
 .Map
     padding-bottom 15vw
     &__water
@@ -50,6 +63,11 @@
         background-repeat no-repeat
         background-image url('../../assets/logo.svg')
         position fixed
+        transition top 0.3s cubic-bezier(0.255, 0.03, 0.515, 0.955)
+        &:hover
+            top -2vw
+            cursor pointer
+            transition top 0.2s cubic-bezier(0.255, 0.03, 0.515, 0.955)
     &__content
         background #241B1B
         position fixed
